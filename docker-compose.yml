@@ -1,0 +1,91 @@
+services:
+  # ---------------------------------------------------------------------------
+  # Service 1: PostgreSQL 16 Dimensional Data Warehouse
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: datapulse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-datapulse_dw}
+      POSTGRES_USER: ${POSTGRES_USER:-datapulse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-datapulse_secure_pass}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./sql/schema/01_init_warehouse.sql:/docker-entrypoint-initdb.d/02_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-datapulse} -d ${POSTGRES_DB:-datapulse_dw}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Service 2: Mock Orders REST API (FastAPI)
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: datapulse-api
+    command: uvicorn app.api.app:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - RANDOM_SEED=42
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # Service 3: DataPulse ELT Pipeline Runner
+  # ---------------------------------------------------------------------------
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: datapulse-pipeline
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER:-datapulse}:${POSTGRES_PASSWORD:-datapulse_secure_pass}@postgres:5432/${POSTGRES_DB:-datapulse_dw}
+      - API_BASE_URL=http://api:8000
+      - RANDOM_SEED=42
+    command: python main.py --pipeline
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+
+  # ---------------------------------------------------------------------------
+  # Service 4: Streamlit Analytics Dashboard
+  # ---------------------------------------------------------------------------
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: datapulse-dashboard
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER:-datapulse}:${POSTGRES_PASSWORD:-datapulse_secure_pass}@postgres:5432/${POSTGRES_DB:-datapulse_dw}
+      - RANDOM_SEED=42
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+
+volumes:
+  postgres_data:
+    driver: local

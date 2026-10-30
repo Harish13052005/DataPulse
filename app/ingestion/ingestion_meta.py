@@ -1,0 +1,10 @@
+'''Standard ingestion metadata structures for DataPulse.
+
+Both source ingestors return a ``IngestionResult`` containing the list of
+records and a ``RunMetadata`` object describing the run.
+'''\n\nfrom __future__ import annotations\n\nimport uuid\nfrom dataclasses import dataclass, asdict\nfrom datetime import datetime, timezone\nfrom typing import List, Dict, Any\n\n\n@dataclass(slots=True)\nclass RunMetadata:\n    """Metadata describing a single ingestion run.
+\n    Attributes\n    ----------\n    run_id: str\n        UUID v4 string identifying this run (useful for idempotency).\n    source_name: str\n        Logical name of the source (e.g. ``CSV_CUSTOMERS`` or ``API_ORDERS``).\n    source_identifier: str\n        For files this is the filename; for APIs it is the base endpoint URL.\n    extracted_count: int\n        Number of records successfully extracted (including dirty ones).\n    ingestion_timestamp: str\n        ISO‑8601 UTC timestamp when the ingestion finished.\n    ingestion_status: str\n        ``SUCCESS`` if the source was fully read, ``PARTIAL`` if some rows
+        failed but the process continued, ``FAILED`` if the whole run failed.\n    """\n\n    run_id: str = uuid.uuid4().hex\n    source_name: str = ""\n    source_identifier: str = ""\n    extracted_count: int = 0\n    ingestion_timestamp: str = datetime.now(timezone.utc).isoformat()\n    ingestion_status: str = "SUCCESS"\n\n    def as_dict(self) -> Dict[str, Any]:\n        return asdict(self)\n\n\n@dataclass(slots=True)\nclass IngestionResult:\n    """Container returned by an ingestor.
+\n    ``records`` is a list of enriched dictionaries (each record already contains
+    per‑record audit fields like ``_source_system`` and ``_ingested_at``).\n    ``metadata`` holds the run‑level information above.
+    """\n\n    records: List[Dict[str, Any]]\n    metadata: RunMetadata\n\n    def as_dict(self) -> Dict[str, Any]:\n        return {"records": self.records, "metadata": self.metadata.as_dict()}\n

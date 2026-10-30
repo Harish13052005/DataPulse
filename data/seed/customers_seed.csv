@@ -1,0 +1,251 @@
+customer_id,first_name,last_name,email,phone,address,city,state,postal_code,country,signup_date,customer_segment,is_active
+CUST-1001,Linda,Smith,linda.smith1@example.com,+1-304-792-9935,1524 Pine St,Chicago,IL,60601,USA,2023-09-08,Standard,True
+CUST-1002,Margaret,Johnson,margaret.johnson2@example.com,+1-816-127-4257,9028 Oak Blvd,New York,NY,10001,USA,2023-04-06,Standard,True
+CUST-1003,Joseph,Anderson,joseph.anderson3@example.com,+1-363-814-7924,5674 Broadway,Portland,OR,97201,USA,2023-10-12,Standard,True
+CUST-1004,Elizabeth,Miller,elizabeth.miller4@example.com,+1-567-967-6635,9991 Broadway,Boston,MA,02108,USA,2023-04-15,Standard,True
+CUST-1005,Robert,White,robert.white5@example.com,+1-587-180-5803,6025 Pine St,Atlanta,GA,30301,USA,2024-07-03,Standard,True
+CUST-1006,Richard,Thompson,richard.thompson6@example.com,+1-496-181-4814,1754 Oak Blvd,San Francisco,CA,94102,USA,2023-02-16,VIP,True
+CUST-1007,Sarah,Anderson,sarah.anderson7@example.com,+1-886-373-2169,2903 Pine St,Boston,MA,02108,USA,2023-06-16,Standard,True
+CUST-1008,Jessica,Garcia,jessica.garcia8@example.com,+1-855-804-4598,5413 Market St,Atlanta,GA,30301,USA,2024-01-24,Standard,True
+CUST-1009,Joseph,Clark,joseph.clark9@example.com,+1-416-680-6155,3583 Oak Blvd,New York,NY,10001,USA,2023-11-20,Premium,True
+CUST-1010,Betty,Lewis,betty.lewis10@example.com,+1-962-674-9830,4404 Pine St,Atlanta,GA,30301,USA,2023-05-27,Standard,True
+CUST-1011,Margaret,Lewis,margaret.lewis11@example.com,+1-341-621-9085,1589 Market St,Portland,OR,97201,USA,2024-02-13,Standard,True
+CUST-1012,Linda,Jones,invalid_email_12_at_example,+1-590-710-8668,8769 Broadway,Austin,TX,78701,USA,2024-03-08,Premium,False
+CUST-1013,Emily,Ramirez,emily.ramirez13@example.com,+1-968-373-6573,1927 Broadway,New York,NY,10001,USA,2023-04-28,VIP,True
+CUST-1014,Margaret,Garcia,margaret.garcia14@example.com,+1-469-612-3927,8417 Market St,Atlanta,GA,30301,USA,2023-01-04,VIP,True
+CUST-1015,Karen,Clark,karen.clark15@example.com,+1-365-652-9689,109 Pine St,Miami,FL,33101,USA,2023-07-23,Standard,True
+CUST-1016,Christopher,Thomas,christopher.thomas16@example.com,+1-514-345-1949,4046 Pine St,New York,NY,10001,USA,2023-04-25,Standard,True
+CUST-1017,Jennifer,Williams,jennifer.williams17@example.com,+1-331-775-8787,9107 Main Ave,Atlanta,GA,30301,USA,2023-03-12,Premium,True
+CUST-1018,Thomas,Taylor,thomas.taylor18@example.com,+1-973-847-4295,5207 Oak Blvd,Portland,OR,97201,USA,2024-03-09,Standard,True
+CUST-1019,Lisa,Anderson,lisa.anderson19@example.com,+1-265-446-1344,9738 Pine St,Miami,FL,33101,USA,2024-04-07,Standard,True
+CUST-1020,Joseph,Jackson,joseph.jackson20@example.com,+1-260-334-2104,614 Broadway,Seattle,WA,98101,USA,2023-01-08,Standard,True
+CUST-1021,John,Taylor,john.taylor21@example.com,+1-752-235-8744,4081 Oak Blvd,Seattle,WA,98101,USA,2023-10-13,VIP,True
+CUST-1022,Anthony,Miller,anthony.miller22@example.com,+1-633-520-8651,987 Market St,San Francisco,CA,94102,USA,2023-04-10,VIP,True
+CUST-1023,Patricia,Gonzalez,patricia.gonzalez23@example.com,+1-749-559-3296,7012 Main Ave,Boston,MA,02108,USA,2023-04-22,Standard,True
+CUST-1024,Sarah,Anderson,invalid_email_24_at_example,+1-763-200-1828,8956 Market St,Seattle,WA,98101,USA,2023-03-19,Premium,True
+CUST-1025,Jennifer,Robinson,jennifer.robinson25@example.com,+1-418-985-7570,1060 Main Ave,Seattle,WA,98101,USA,2023-06-20,Premium,True
+CUST-1026,Matthew,Smith,matthew.smith26@example.com,+1-913-848-8973,2636 Main Ave,Denver,CO,80202,USA,2023-09-29,Premium,True
+CUST-1027,Charles,Miller,charles.miller27@example.com,+1-965-421-1936,921 Pine St,New York,NY,10001,USA,2024-08-16,VIP,True
+CUST-1028,Donald,Taylor,donald.taylor28@example.com,+1-282-971-4044,1222 Pine St,Miami,FL,33101,USA,2023-06-11,Standard,True
+CUST-1029,John,Perez,john.perez29@example.com,+1-783-352-1651,1443 Oak Blvd,Seattle,WA,98101,USA,2024-02-18,Standard,True
+CUST-1030,Donna,Jackson,donna.jackson30@example.com,+1-933-421-4910,4451 Oak Blvd,Miami,FL,33101,USA,2023-11-20,Standard,True
+CUST-1031,David,Perez,david.perez31@example.com,+1-274-109-8508,9324 Market St,Chicago,IL,60601,USA,2024-04-13,Standard,True
+CUST-1032,John,Moore,john.moore32@example.com,+1-557-170-5002,6154 Broadway,Seattle,WA,98101,USA,2024-06-02,Standard,True
+CUST-1033,William,Anderson,william.anderson33@example.com,+1-869-641-1128,9186 Broadway,Miami,FL,33101,USA,2023-11-06,Premium,True
+CUST-1034,Michael,Walker,michael.walker34@example.com,+1-960-666-3546,4562 Broadway,Austin,TX,78701,USA,2023-09-28,Standard,True
+CUST-1035,Joshua,Miller,joshua.miller35@example.com,+1-470-617-9004,4214 Market St,Boston,MA,02108,USA,2023-07-28,VIP,True
+CUST-1036,Jennifer,Lee,invalid_email_36_at_example,+1-989-233-5291,2747 Oak Blvd,Denver,CO,80202,USA,2023-10-11,Standard,False
+CUST-1037,Emily,Thompson,emily.thompson37@example.com,+1-907-252-9938,690 Broadway,Denver,CO,80202,USA,2024-07-28,Standard,False
+CUST-1038,Donna,Moore,donna.moore38@example.com,+1-573-915-1653,5962 Main Ave,Austin,TX,78701,USA,2024-03-16,Standard,False
+CUST-1039,Jessica,Perez,jessica.perez39@example.com,+1-616-735-3532,3978 Main Ave,San Francisco,CA,94102,USA,2023-12-29,Premium,True
+CUST-1040,Barbara,Lewis,barbara.lewis40@example.com,+1-540-901-7745,4165 Broadway,Denver,CO,80202,USA,2023-01-26,Standard,True
+CUST-1041,William,Sanchez,william.sanchez41@example.com,+1-427-304-8541,5828 Broadway,San Francisco,CA,94102,USA,2024-01-27,Standard,True
+CUST-1042,Joseph,Davis,joseph.davis42@example.com,+1-271-891-5573,5853 Pine St,New York,NY,10001,USA,2023-07-17,Premium,True
+CUST-1043,Betty,Perez,betty.perez43@example.com,+1-467-282-5349,726 Market St,Miami,FL,33101,USA,2023-12-06,Standard,False
+CUST-1044,Joshua,Wilson,joshua.wilson44@example.com,+1-723-218-7311,9546 Main Ave,Boston,MA,02108,USA,2023-11-18,Premium,True
+CUST-1045,Thomas,Johnson,thomas.johnson45@example.com,+1-751-803-4228,6067 Oak Blvd,Denver,CO,80202,USA,2023-01-02,Premium,True
+CUST-1046,John,Walker,john.walker46@example.com,+1-937-407-9308,5167 Oak Blvd,Boston,MA,02108,USA,2023-11-18,VIP,True
+CUST-1047,Christopher,Gonzalez,christopher.gonzalez47@example.com,+1-880-488-3851,9424 Broadway,Chicago,IL,60601,USA,2024-07-21,Standard,True
+CUST-1048,Betty,Moore,invalid_email_48_at_example,+1-793-721-6279,7718 Oak Blvd,New York,NY,10001,USA,2023-11-08,Standard,True
+CUST-1049,Mark,Perez,mark.perez49@example.com,+1-953-273-2389,4749 Pine St,Seattle,WA,98101,USA,2024-06-07,Premium,True
+CUST-1050,Michelle,Hernandez,michelle.hernandez50@example.com,+1-403-250-1400,857 Main Ave,San Francisco,CA,94102,USA,2023-08-29,VIP,True
+CUST-1051,Donald,Martin,donald.martin51@example.com,+1-789-299-7291,8199 Oak Blvd,San Francisco,CA,94102,USA,2024-04-11,Premium,True
+CUST-1052,Jessica,Jones,jessica.jones52@example.com,+1-912-630-8611,922 Pine St,New York,NY,10001,USA,2023-04-20,Premium,True
+CUST-1053,Jessica,Robinson,jessica.robinson53@example.com,+1-883-643-6198,7351 Pine St,San Francisco,CA,94102,USA,2024-04-12,Standard,True
+CUST-1054,Steven,Wilson,steven.wilson54@example.com,+1-686-560-5246,4150 Broadway,Miami,FL,33101,USA,2024-04-01,Standard,True
+CUST-1055,Kimberly,Thomas,kimberly.thomas55@example.com,+1-492-340-5451,5602 Broadway,Seattle,WA,98101,USA,2023-10-09,Premium,False
+CUST-1056,Paul,Williams,paul.williams56@example.com,+1-356-823-4505,1152 Oak Blvd,Austin,TX,78701,USA,2023-06-04,Standard,True
+CUST-1057,Anthony,Hernandez,anthony.hernandez57@example.com,+1-630-498-1320,9532 Oak Blvd,Miami,FL,33101,USA,2024-04-22,Premium,False
+CUST-1058,Donald,Smith,donald.smith58@example.com,+1-629-651-9947,9983 Main Ave,Boston,MA,02108,USA,2023-11-02,Premium,True
+CUST-1059,Ashley,Davis,ashley.davis59@example.com,+1-544-784-7624,2804 Oak Blvd,Chicago,IL,60601,USA,2024-03-22,Premium,False
+CUST-1060,David,Martin,invalid_email_60_at_example,+1-878-127-2375,7122 Main Ave,Miami,FL,33101,USA,2023-01-28,Premium,True
+CUST-1061,Sandra,Garcia,sandra.garcia61@example.com,+1-665-434-6529,6311 Broadway,New York,NY,10001,USA,2023-09-24,Premium,True
+CUST-1062,Anthony,Rodriguez,anthony.rodriguez62@example.com,+1-253-458-4673,1224 Market St,San Francisco,CA,94102,USA,2024-04-26,Standard,True
+CUST-1063,Mary,Walker,mary.walker63@example.com,+1-444-229-8758,1974 Pine St,Seattle,WA,98101,USA,2023-07-24,Standard,True
+CUST-1064,Susan,Anderson,susan.anderson64@example.com,+1-965-835-2876,2783 Broadway,Chicago,IL,60601,USA,2024-01-13,Standard,True
+CUST-1065,Michael,Jackson,michael.jackson65@example.com,+1-584-506-4249,1345 Pine St,New York,NY,10001,USA,2023-11-16,Premium,True
+CUST-1066,Jessica,Brown,jessica.brown66@example.com,+1-555-645-8018,6171 Market St,Chicago,IL,60601,USA,2023-05-04,Premium,True
+CUST-1067,Steven,Lee,steven.lee67@example.com,+1-308-543-6934,7632 Main Ave,Boston,MA,02108,USA,2023-01-13,Premium,True
+CUST-1068,Margaret,Garcia,margaret.garcia68@example.com,+1-751-893-8921,7716 Oak Blvd,Miami,FL,33101,USA,2023-10-04,Premium,True
+CUST-1069,Donna,Rodriguez,donna.rodriguez69@example.com,+1-661-349-8613,9436 Pine St,Boston,MA,02108,USA,2023-09-09,Standard,True
+CUST-1070,Matthew,Hernandez,matthew.hernandez70@example.com,+1-417-463-5232,5676 Broadway,New York,NY,10001,USA,2024-05-21,Standard,True
+CUST-1071,Joshua,Thompson,joshua.thompson71@example.com,+1-395-187-4954,6758 Oak Blvd,Chicago,IL,60601,USA,2024-07-23,Standard,True
+CUST-1072,Emily,Harris,invalid_email_72_at_example,+1-658-911-1282,1624 Broadway,Seattle,WA,98101,USA,2024-05-02,VIP,True
+CUST-1073,Joseph,Gonzalez,joseph.gonzalez73@example.com,+1-684-666-9698,5732 Oak Blvd,Seattle,WA,98101,USA,2023-11-10,VIP,True
+CUST-1074,Emily,Hernandez,emily.hernandez74@example.com,+1-436-223-4155,5269 Market St,Boston,MA,02108,USA,2024-04-09,Standard,True
+CUST-1075,Paul,Walker,paul.walker75@example.com,+1-483-841-9595,9877 Broadway,Austin,TX,78701,USA,2023-07-16,Standard,True
+CUST-1076,Michael,Clark,michael.clark76@example.com,+1-509-114-9751,2173 Broadway,Seattle,WA,98101,USA,2023-10-31,Standard,True
+CUST-1077,Robert,Johnson,robert.johnson77@example.com,+1-853-989-9042,1780 Market St,Miami,FL,33101,USA,2023-10-27,VIP,True
+CUST-1078,Andrew,Martinez,andrew.martinez78@example.com,+1-252-358-8827,1969 Market St,Atlanta,GA,30301,USA,2024-05-05,Premium,True
+CUST-1079,Betty,Thomas,betty.thomas79@example.com,+1-355-252-5978,1495 Main Ave,San Francisco,CA,94102,USA,2024-08-13,VIP,True
+CUST-1080,Linda,Moore,linda.moore80@example.com,+1-653-404-8025,5103 Pine St,Denver,CO,80202,USA,2023-08-20,Premium,True
+CUST-1081,Michelle,Johnson,michelle.johnson81@example.com,+1-470-776-2330,2673 Main Ave,Portland,OR,97201,USA,2023-04-12,Standard,True
+CUST-1082,Barbara,Moore,barbara.moore82@example.com,+1-905-708-8699,4871 Market St,San Francisco,CA,94102,USA,2023-06-10,Standard,True
+CUST-1083,Joseph,Martinez,joseph.martinez83@example.com,+1-470-906-4241,7065 Market St,Chicago,IL,60601,USA,2024-04-09,Standard,True
+CUST-1084,Paul,Davis,invalid_email_84_at_example,+1-369-911-6039,9849 Pine St,Austin,TX,78701,USA,2023-09-30,Standard,False
+CUST-1085,Charles,Anderson,charles.anderson85@example.com,+1-612-378-9199,8947 Oak Blvd,San Francisco,CA,94102,USA,2024-04-24,VIP,True
+CUST-1086,Mark,Williams,mark.williams86@example.com,+1-818-356-1423,1596 Main Ave,Portland,OR,97201,USA,2023-02-10,Premium,True
+CUST-1087,Andrew,Jackson,andrew.jackson87@example.com,+1-974-279-8708,8602 Oak Blvd,New York,NY,10001,USA,2023-10-03,Premium,False
+CUST-1088,Sarah,Garcia,sarah.garcia88@example.com,+1-293-581-6700,6790 Broadway,Portland,OR,97201,USA,2024-03-22,VIP,True
+CUST-1089,Christopher,Perez,christopher.perez89@example.com,+1-707-395-7561,9112 Market St,San Francisco,CA,94102,USA,2023-06-14,Standard,True
+CUST-1090,Sandra,Williams,sandra.williams90@example.com,+1-991-513-9431,118 Pine St,Boston,MA,02108,USA,2023-09-16,Standard,False
+CUST-1091,Sandra,Wilson,sandra.wilson91@example.com,+1-974-610-8242,945 Main Ave,New York,NY,10001,USA,2023-07-12,Premium,True
+CUST-1092,Sarah,Moore,sarah.moore92@example.com,+1-696-224-1472,4020 Main Ave,Austin,TX,78701,USA,2023-10-22,Premium,True
+CUST-1093,Karen,Moore,karen.moore93@example.com,+1-316-572-2924,2622 Oak Blvd,New York,NY,10001,USA,2024-07-19,Premium,False
+CUST-1094,Charles,Taylor,charles.taylor94@example.com,+1-449-567-3369,6384 Main Ave,Chicago,IL,60601,USA,2024-03-01,Premium,True
+CUST-1095,Joshua,Taylor,joshua.taylor95@example.com,+1-624-448-9318,4477 Market St,Austin,TX,78701,USA,2023-03-13,Standard,True
+CUST-1096,Charles,White,invalid_email_96_at_example,+1-352-557-9824,8035 Broadway,Chicago,IL,60601,USA,2024-08-16,VIP,True
+CUST-1097,Nancy,Moore,nancy.moore97@example.com,+1-393-814-4912,9468 Oak Blvd,Miami,FL,33101,USA,2024-01-22,Premium,True
+CUST-1098,Joseph,Ramirez,joseph.ramirez98@example.com,+1-922-930-7246,6425 Main Ave,Denver,CO,80202,USA,2023-02-14,Standard,True
+CUST-1099,Ashley,Walker,ashley.walker99@example.com,+1-539-990-2644,7313 Market St,New York,NY,10001,USA,2023-05-10,Premium,True
+CUST-1100,Kimberly,Robinson,kimberly.robinson100@example.com,+1-870-258-2225,7792 Broadway,Atlanta,GA,30301,USA,2023-01-16,VIP,True
+CUST-1101,Nancy,Martin,nancy.martin101@example.com,+1-746-489-6188,8094 Pine St,Denver,CO,80202,USA,2023-03-24,Standard,True
+CUST-1102,Robert,Martin,robert.martin102@example.com,+1-494-332-2480,7210 Market St,San Francisco,CA,94102,USA,2023-08-29,VIP,True
+CUST-1103,Michael,Anderson,michael.anderson103@example.com,+1-257-400-6873,6241 Oak Blvd,Austin,TX,78701,USA,2023-11-03,Standard,False
+CUST-1104,Elizabeth,Davis,elizabeth.davis104@example.com,+1-384-274-3868,1393 Pine St,Miami,FL,33101,USA,2024-02-26,Premium,True
+CUST-1105,Matthew,Martin,matthew.martin105@example.com,+1-672-753-5161,7629 Broadway,Seattle,WA,98101,USA,2024-05-24,Premium,True
+CUST-1106,James,Lewis,james.lewis106@example.com,+1-275-552-6661,9726 Broadway,Atlanta,GA,30301,USA,2023-10-22,VIP,True
+CUST-1107,Margaret,Thompson,margaret.thompson107@example.com,+1-593-973-8916,1847 Main Ave,Chicago,IL,60601,USA,2024-04-12,Standard,True
+CUST-1108,Matthew,Jackson,invalid_email_108_at_example,+1-502-122-7484,4597 Market St,Boston,MA,02108,USA,2024-08-11,Standard,True
+CUST-1109,Andrew,Ramirez,andrew.ramirez109@example.com,+1-435-721-6772,3688 Main Ave,New York,NY,10001,USA,2024-05-23,Standard,True
+CUST-1110,Michelle,Rodriguez,michelle.rodriguez110@example.com,+1-516-907-8222,646 Pine St,Austin,TX,78701,USA,2023-04-10,VIP,True
+CUST-1111,Lisa,White,lisa.white111@example.com,+1-625-279-4289,2265 Pine St,Austin,TX,78701,USA,2023-04-03,Standard,True
+CUST-1112,Lisa,Taylor,lisa.taylor112@example.com,+1-693-925-5835,5649 Market St,Miami,FL,33101,USA,2023-10-07,Standard,True
+CUST-1113,Sandra,Walker,sandra.walker113@example.com,+1-941-790-7511,9231 Broadway,San Francisco,CA,94102,USA,2023-05-25,Standard,True
+CUST-1114,Jennifer,Sanchez,jennifer.sanchez114@example.com,+1-665-477-5295,9677 Oak Blvd,Denver,CO,80202,USA,2023-01-15,Standard,True
+CUST-1115,Lisa,Brown,lisa.brown115@example.com,+1-774-435-4626,1135 Oak Blvd,Seattle,WA,98101,USA,2024-04-27,Standard,True
+CUST-1116,Karen,Lee,karen.lee116@example.com,+1-238-411-9071,2002 Market St,Denver,CO,80202,USA,2023-04-30,Standard,False
+CUST-1117,Jessica,Lewis,jessica.lewis117@example.com,+1-886-860-9850,6966 Pine St,Miami,FL,33101,USA,2023-05-19,Premium,True
+CUST-1118,Elizabeth,Lewis,elizabeth.lewis118@example.com,+1-486-133-7070,3659 Oak Blvd,Denver,CO,80202,USA,2023-04-12,Premium,True
+CUST-1119,Mark,Walker,mark.walker119@example.com,+1-576-657-6876,1092 Oak Blvd,Seattle,WA,98101,USA,2024-01-07,Standard,True
+CUST-1120,Sarah,Miller,invalid_email_120_at_example,+1-857-754-1349,928 Broadway,San Francisco,CA,94102,USA,2024-04-10,Standard,True
+CUST-1121,Jessica,Jones,jessica.jones121@example.com,+1-767-312-4538,3917 Broadway,Portland,OR,97201,USA,2023-07-30,Standard,True
+CUST-1122,Elizabeth,Sanchez,elizabeth.sanchez122@example.com,+1-348-233-9850,4206 Main Ave,Portland,OR,97201,USA,2023-01-03,Standard,True
+CUST-1123,Linda,Perez,linda.perez123@example.com,+1-443-702-6304,358 Main Ave,New York,NY,10001,USA,2023-05-15,Standard,True
+CUST-1124,Thomas,Johnson,thomas.johnson124@example.com,+1-265-587-8344,6031 Pine St,Austin,TX,78701,USA,2024-03-07,Premium,False
+CUST-1125,Donna,Brown,donna.brown125@example.com,+1-244-844-9543,5041 Oak Blvd,Atlanta,GA,30301,USA,2024-05-30,Standard,True
+CUST-1126,Mary,Johnson,mary.johnson126@example.com,+1-702-829-8267,1304 Market St,Atlanta,GA,30301,USA,2024-02-16,Premium,True
+CUST-1127,Christopher,Martin,christopher.martin127@example.com,+1-848-699-9984,5427 Oak Blvd,Austin,TX,78701,USA,2023-03-09,Standard,True
+CUST-1128,Joshua,Taylor,joshua.taylor128@example.com,+1-301-912-2874,9133 Main Ave,Chicago,IL,60601,USA,2024-04-09,Premium,True
+CUST-1129,Margaret,Anderson,margaret.anderson129@example.com,+1-608-525-2557,5220 Oak Blvd,Seattle,WA,98101,USA,2024-02-28,Standard,True
+CUST-1130,Christopher,Perez,christopher.perez130@example.com,+1-685-168-2494,1498 Market St,Chicago,IL,60601,USA,2024-01-19,Standard,True
+CUST-1131,Margaret,Brown,margaret.brown131@example.com,+1-775-675-6400,2102 Oak Blvd,Boston,MA,02108,USA,2023-05-14,Premium,False
+CUST-1132,Daniel,Ramirez,invalid_email_132_at_example,+1-560-206-9313,3585 Main Ave,Denver,CO,80202,USA,2023-02-22,Standard,True
+CUST-1133,Donald,Davis,donald.davis133@example.com,+1-980-385-4705,7130 Pine St,San Francisco,CA,94102,USA,2023-12-25,Premium,True
+CUST-1134,Michelle,Martin,michelle.martin134@example.com,+1-910-373-1474,3055 Broadway,Miami,FL,33101,USA,2023-01-27,Premium,True
+CUST-1135,Karen,Robinson,karen.robinson135@example.com,+1-346-679-7566,1240 Main Ave,Boston,MA,02108,USA,2023-12-26,Standard,True
+CUST-1136,Mary,Williams,mary.williams136@example.com,+1-549-261-7062,5205 Broadway,Miami,FL,33101,USA,2023-08-09,Premium,True
+CUST-1137,Andrew,Martin,andrew.martin137@example.com,+1-832-150-2336,4558 Oak Blvd,San Francisco,CA,94102,USA,2023-02-23,Standard,True
+CUST-1138,Margaret,Thomas,margaret.thomas138@example.com,+1-973-624-2864,5755 Oak Blvd,Portland,OR,97201,USA,2024-03-28,Premium,True
+CUST-1139,Linda,Martinez,linda.martinez139@example.com,+1-246-325-7475,9919 Market St,Portland,OR,97201,USA,2024-05-13,Premium,True
+CUST-1140,James,Miller,james.miller140@example.com,+1-496-435-2965,226 Oak Blvd,Chicago,IL,60601,USA,2023-08-05,Standard,True
+CUST-1141,Margaret,Garcia,margaret.garcia141@example.com,+1-712-672-6802,1280 Oak Blvd,Austin,TX,78701,USA,2024-01-25,Premium,True
+CUST-1142,Robert,Wilson,robert.wilson142@example.com,+1-789-539-7626,6943 Broadway,New York,NY,10001,USA,2024-04-15,Standard,True
+CUST-1143,Linda,Gonzalez,linda.gonzalez143@example.com,+1-832-571-6928,1543 Oak Blvd,New York,NY,10001,USA,2023-11-29,Standard,True
+CUST-1144,Michael,Davis,invalid_email_144_at_example,+1-517-863-6562,3730 Broadway,Denver,CO,80202,USA,2024-02-15,Premium,False
+CUST-1145,William,Williams,william.williams145@example.com,+1-994-457-6752,2519 Main Ave,Miami,FL,33101,USA,2023-04-27,Premium,True
+CUST-1146,Michael,Jones,michael.jones146@example.com,+1-978-877-2234,3002 Oak Blvd,Chicago,IL,60601,USA,2023-07-22,Standard,True
+CUST-1147,Sandra,Harris,sandra.harris147@example.com,+1-778-758-6295,5279 Main Ave,Portland,OR,97201,USA,2024-08-16,Premium,True
+CUST-1148,Mark,Williams,mark.williams148@example.com,+1-481-705-1920,5866 Pine St,Atlanta,GA,30301,USA,2024-03-28,VIP,True
+CUST-1149,John,Martinez,john.martinez149@example.com,+1-493-178-2479,9833 Pine St,Atlanta,GA,30301,USA,2024-04-07,Standard,False
+CUST-1150,Matthew,Anderson,matthew.anderson150@example.com,+1-660-929-4084,5367 Pine St,Portland,OR,97201,USA,2024-07-21,VIP,True
+CUST-1151,Donald,Taylor,donald.taylor151@example.com,+1-551-831-2381,8366 Main Ave,Austin,TX,78701,USA,2023-03-05,Premium,False
+CUST-1152,Robert,Davis,robert.davis152@example.com,+1-362-472-7108,4734 Oak Blvd,Atlanta,GA,30301,USA,2024-03-25,Premium,True
+CUST-1153,Anthony,Harris,anthony.harris153@example.com,+1-267-437-2548,9241 Oak Blvd,Boston,MA,02108,USA,2023-02-23,VIP,True
+CUST-1154,Charles,Rodriguez,charles.rodriguez154@example.com,+1-879-244-6731,5182 Oak Blvd,Portland,OR,97201,USA,2023-06-03,Standard,False
+CUST-1155,David,Martin,david.martin155@example.com,+1-536-932-3093,8724 Market St,San Francisco,CA,94102,USA,2023-11-14,Premium,True
+CUST-1156,Margaret,Taylor,invalid_email_156_at_example,+1-419-449-8967,3245 Main Ave,Boston,MA,02108,USA,2023-01-19,Standard,True
+CUST-1157,David,Jones,david.jones157@example.com,+1-752-955-9626,718 Broadway,San Francisco,CA,94102,USA,2023-10-30,Standard,True
+CUST-1158,Michelle,Jones,michelle.jones158@example.com,+1-909-889-3712,7270 Market St,Portland,OR,97201,USA,2024-01-21,Standard,True
+CUST-1159,Anthony,Lopez,anthony.lopez159@example.com,+1-966-902-8355,3933 Pine St,Seattle,WA,98101,USA,2024-03-30,Premium,True
+CUST-1160,Jessica,Martinez,jessica.martinez160@example.com,+1-784-551-8564,4716 Oak Blvd,Atlanta,GA,30301,USA,2023-07-18,Standard,True
+CUST-1161,Steven,Taylor,steven.taylor161@example.com,+1-341-993-5096,954 Oak Blvd,Denver,CO,80202,USA,2023-06-15,Standard,True
+CUST-1162,Lisa,Moore,lisa.moore162@example.com,+1-981-264-5469,7461 Pine St,San Francisco,CA,94102,USA,2024-06-12,Standard,True
+CUST-1163,Elizabeth,Clark,elizabeth.clark163@example.com,+1-557-127-7797,972 Oak Blvd,Denver,CO,80202,USA,2023-04-04,Standard,True
+CUST-1164,Steven,Lopez,steven.lopez164@example.com,+1-228-426-2623,5593 Main Ave,Seattle,WA,98101,USA,2024-01-31,Standard,True
+CUST-1165,David,Johnson,david.johnson165@example.com,+1-977-822-8685,7449 Pine St,Chicago,IL,60601,USA,2024-04-28,VIP,True
+CUST-1166,James,Lewis,james.lewis166@example.com,+1-353-661-9647,7034 Market St,San Francisco,CA,94102,USA,2023-01-20,Standard,True
+CUST-1167,Charles,Davis,charles.davis167@example.com,+1-854-912-8489,1129 Market St,Chicago,IL,60601,USA,2023-05-05,Standard,True
+CUST-1168,Ashley,Martin,invalid_email_168_at_example,+1-447-835-3352,4872 Oak Blvd,Miami,FL,33101,USA,2023-01-17,VIP,True
+CUST-1169,James,Martin,james.martin169@example.com,+1-880-784-2402,8676 Broadway,Boston,MA,02108,USA,2023-09-04,Premium,True
+CUST-1170,John,Walker,john.walker170@example.com,+1-719-667-1333,6497 Oak Blvd,Miami,FL,33101,USA,2024-07-11,Premium,True
+CUST-1171,Robert,Lee,robert.lee171@example.com,+1-565-907-2106,5749 Main Ave,Denver,CO,80202,USA,2024-01-18,Standard,True
+CUST-1172,Michael,Harris,michael.harris172@example.com,+1-759-446-3868,7712 Oak Blvd,Portland,OR,97201,USA,2023-12-07,Standard,False
+CUST-1173,Barbara,Sanchez,barbara.sanchez173@example.com,+1-668-137-5807,3402 Market St,Austin,TX,78701,USA,2023-03-06,VIP,True
+CUST-1174,Richard,Lewis,richard.lewis174@example.com,+1-756-584-5150,699 Main Ave,New York,NY,10001,USA,2023-11-20,Standard,True
+CUST-1175,Charles,Lopez,charles.lopez175@example.com,+1-576-547-7553,7304 Oak Blvd,New York,NY,10001,USA,2023-12-06,Standard,True
+CUST-1176,Nancy,Garcia,nancy.garcia176@example.com,+1-731-373-2353,7055 Market St,Atlanta,GA,30301,USA,2024-05-24,Standard,True
+CUST-1177,Margaret,Martin,margaret.martin177@example.com,+1-281-435-5843,5121 Oak Blvd,Austin,TX,78701,USA,2024-07-12,Standard,True
+CUST-1178,Joshua,Thompson,joshua.thompson178@example.com,+1-657-143-6776,7226 Broadway,Denver,CO,80202,USA,2023-06-20,VIP,True
+CUST-1179,Patricia,Williams,patricia.williams179@example.com,+1-895-263-1510,2439 Pine St,Denver,CO,80202,USA,2024-01-08,Premium,True
+CUST-1180,Mark,Johnson,invalid_email_180_at_example,+1-575-470-7272,9393 Market St,Austin,TX,78701,USA,2023-03-10,Standard,True
+CUST-1181,Joshua,Jones,joshua.jones181@example.com,+1-278-687-3255,8774 Broadway,Atlanta,GA,30301,USA,2024-01-15,Standard,True
+CUST-1182,Betty,Hernandez,betty.hernandez182@example.com,+1-390-611-9482,6440 Pine St,Chicago,IL,60601,USA,2023-09-13,Standard,False
+CUST-1183,Linda,Rodriguez,linda.rodriguez183@example.com,+1-492-810-9047,3379 Market St,Chicago,IL,60601,USA,2024-04-01,Standard,True
+CUST-1184,David,Ramirez,david.ramirez184@example.com,+1-655-189-6236,5792 Market St,San Francisco,CA,94102,USA,2024-04-07,Standard,True
+CUST-1185,Emily,Moore,emily.moore185@example.com,+1-917-753-3852,6022 Pine St,Chicago,IL,60601,USA,2023-11-04,Standard,True
+CUST-1186,Joseph,Brown,joseph.brown186@example.com,+1-226-469-7044,7757 Pine St,Seattle,WA,98101,USA,2023-05-23,Standard,True
+CUST-1187,David,Martin,david.martin187@example.com,+1-934-836-8842,8712 Oak Blvd,San Francisco,CA,94102,USA,2023-03-09,Standard,True
+CUST-1188,Anthony,Clark,anthony.clark188@example.com,+1-857-175-8372,7732 Pine St,Portland,OR,97201,USA,2023-03-17,Standard,True
+CUST-1189,Daniel,Jones,daniel.jones189@example.com,+1-256-951-3034,8588 Main Ave,Miami,FL,33101,USA,2023-07-06,Standard,True
+CUST-1190,Karen,Garcia,karen.garcia190@example.com,+1-731-390-2292,4205 Main Ave,Austin,TX,78701,USA,2023-11-27,VIP,True
+CUST-1191,Emily,Rodriguez,emily.rodriguez191@example.com,+1-714-756-3762,9796 Pine St,Austin,TX,78701,USA,2023-11-07,Premium,True
+CUST-1192,Elizabeth,Garcia,invalid_email_192_at_example,+1-229-183-1744,9549 Broadway,Portland,OR,97201,USA,2023-12-12,Premium,False
+CUST-1193,Susan,Harris,susan.harris193@example.com,+1-709-742-9938,4845 Broadway,Portland,OR,97201,USA,2024-03-02,Premium,True
+CUST-1194,Donald,Davis,donald.davis194@example.com,+1-261-261-8202,6909 Oak Blvd,Denver,CO,80202,USA,2023-11-01,Premium,False
+CUST-1195,Sandra,Miller,sandra.miller195@example.com,+1-526-851-6658,6632 Main Ave,Boston,MA,02108,USA,2023-05-28,Standard,True
+CUST-1196,Lisa,Taylor,lisa.taylor196@example.com,+1-325-373-8366,4161 Main Ave,Miami,FL,33101,USA,2023-04-19,Standard,True
+CUST-1197,Michael,Johnson,michael.johnson197@example.com,+1-363-933-6364,9564 Broadway,Chicago,IL,60601,USA,2024-01-29,Premium,True
+CUST-1198,Richard,Harris,richard.harris198@example.com,+1-515-609-1379,1575 Oak Blvd,Austin,TX,78701,USA,2024-05-25,Premium,True
+CUST-1199,Steven,Anderson,steven.anderson199@example.com,+1-251-388-9108,9889 Oak Blvd,Seattle,WA,98101,USA,2023-08-09,Premium,True
+CUST-1200,Charles,Moore,charles.moore200@example.com,+1-470-844-6992,6706 Broadway,New York,NY,10001,USA,2023-04-21,Premium,True
+CUST-1201,Robert,Gonzalez,robert.gonzalez201@example.com,+1-766-395-2204,6429 Pine St,New York,NY,10001,USA,2024-08-06,Premium,True
+CUST-1202,Mark,Harris,mark.harris202@example.com,+1-321-231-2584,6553 Broadway,Miami,FL,33101,USA,2023-10-14,Premium,True
+CUST-1203,Nancy,Moore,nancy.moore203@example.com,+1-611-612-1659,842 Market St,Boston,MA,02108,USA,2023-05-28,Standard,True
+CUST-1204,David,Thompson,invalid_email_204_at_example,+1-820-627-3290,5473 Pine St,Boston,MA,02108,USA,2024-04-30,Premium,True
+CUST-1205,Christopher,Garcia,christopher.garcia205@example.com,+1-721-645-9025,9322 Broadway,Denver,CO,80202,USA,2023-11-03,Premium,True
+CUST-1206,Donald,Clark,donald.clark206@example.com,+1-626-697-6040,536 Pine St,New York,NY,10001,USA,2024-01-13,Standard,True
+CUST-1207,Donald,Rodriguez,donald.rodriguez207@example.com,+1-797-591-3793,8689 Pine St,Portland,OR,97201,USA,2024-08-14,Standard,True
+CUST-1208,Matthew,Jones,matthew.jones208@example.com,+1-312-295-1310,7325 Broadway,Seattle,WA,98101,USA,2023-02-02,Premium,True
+CUST-1209,Anthony,Jones,anthony.jones209@example.com,+1-826-582-2020,2362 Pine St,Denver,CO,80202,USA,2023-07-28,Premium,True
+CUST-1210,Susan,Moore,susan.moore210@example.com,+1-377-570-9734,5708 Pine St,Boston,MA,02108,USA,2024-05-04,Premium,True
+CUST-1211,Daniel,Perez,daniel.perez211@example.com,+1-485-671-5890,3784 Broadway,Chicago,IL,60601,USA,2024-05-10,Standard,True
+CUST-1212,Charles,Thompson,charles.thompson212@example.com,+1-773-914-5480,4815 Market St,Seattle,WA,98101,USA,2024-05-15,Standard,True
+CUST-1213,Andrew,Perez,andrew.perez213@example.com,+1-991-923-3399,4858 Market St,Miami,FL,33101,USA,2024-01-24,Premium,True
+CUST-1214,Charles,Walker,charles.walker214@example.com,+1-965-590-4505,3410 Pine St,San Francisco,CA,94102,USA,2023-12-21,Premium,True
+CUST-1215,Sarah,Robinson,sarah.robinson215@example.com,+1-958-700-4920,4072 Market St,Miami,FL,33101,USA,2023-10-06,Standard,False
+CUST-1216,Kimberly,Davis,invalid_email_216_at_example,+1-934-583-2647,2352 Market St,Seattle,WA,98101,USA,2023-02-23,Standard,True
+CUST-1217,Emily,Robinson,emily.robinson217@example.com,+1-687-588-4267,4806 Broadway,Austin,TX,78701,USA,2024-02-21,VIP,True
+CUST-1218,Charles,Lee,charles.lee218@example.com,+1-747-856-1611,2968 Oak Blvd,New York,NY,10001,USA,2023-04-02,VIP,True
+CUST-1219,Barbara,Robinson,barbara.robinson219@example.com,+1-966-993-5742,713 Market St,New York,NY,10001,USA,2024-02-11,Premium,True
+CUST-1220,Karen,Jackson,karen.jackson220@example.com,+1-856-656-9590,8192 Main Ave,Portland,OR,97201,USA,2023-04-20,Standard,True
+CUST-1221,Steven,Anderson,steven.anderson221@example.com,+1-948-569-5215,3150 Market St,Chicago,IL,60601,USA,2023-07-17,Standard,True
+CUST-1222,Nancy,Sanchez,nancy.sanchez222@example.com,+1-379-725-7643,7107 Pine St,Chicago,IL,60601,USA,2024-08-04,VIP,True
+CUST-1223,Christopher,Williams,christopher.williams223@example.com,+1-688-431-5064,211 Broadway,Denver,CO,80202,USA,2023-04-08,Standard,True
+CUST-1224,Matthew,Davis,matthew.davis224@example.com,+1-940-686-1187,4385 Broadway,Atlanta,GA,30301,USA,2023-10-01,Standard,True
+CUST-1225,Jessica,Johnson,jessica.johnson225@example.com,+1-902-614-6095,2023 Broadway,San Francisco,CA,94102,USA,2024-04-21,Standard,True
+CUST-1226,Lisa,Martin,lisa.martin226@example.com,+1-665-865-7121,6913 Pine St,Seattle,WA,98101,USA,2023-08-13,Standard,True
+CUST-1227,Donald,Harris,donald.harris227@example.com,+1-810-994-2341,8709 Oak Blvd,Miami,FL,33101,USA,2023-08-12,Standard,True
+CUST-1228,Kimberly,Thompson,invalid_email_228_at_example,+1-760-617-4312,9483 Pine St,Boston,MA,02108,USA,2023-03-21,Premium,False
+CUST-1229,Elizabeth,Garcia,elizabeth.garcia229@example.com,+1-410-834-9008,1589 Pine St,Boston,MA,02108,USA,2024-06-16,Premium,False
+CUST-1230,Mark,Sanchez,mark.sanchez230@example.com,+1-667-677-1945,9255 Oak Blvd,New York,NY,10001,USA,2024-04-09,Standard,True
+CUST-1231,Karen,White,karen.white231@example.com,+1-963-323-2196,842 Oak Blvd,New York,NY,10001,USA,2024-02-10,Standard,True
+CUST-1232,Daniel,Thompson,daniel.thompson232@example.com,+1-270-583-1519,4803 Oak Blvd,San Francisco,CA,94102,USA,2024-07-08,Standard,True
+CUST-1233,Barbara,Harris,barbara.harris233@example.com,+1-591-559-7184,6254 Market St,Austin,TX,78701,USA,2024-03-06,Standard,True
+CUST-1234,Paul,Jones,paul.jones234@example.com,+1-602-641-3086,3748 Market St,Boston,MA,02108,USA,2023-05-02,Standard,True
+CUST-1235,Mary,Martinez,mary.martinez235@example.com,+1-435-353-8546,5771 Main Ave,Atlanta,GA,30301,USA,2024-07-11,Premium,True
+CUST-1236,Sarah,Miller,sarah.miller236@example.com,+1-984-116-4943,3476 Market St,San Francisco,CA,94102,USA,2023-02-02,VIP,True
+CUST-1237,Michael,Martin,michael.martin237@example.com,+1-249-350-1724,6690 Oak Blvd,New York,NY,10001,USA,2024-04-02,Premium,True
+CUST-1238,Joseph,Moore,joseph.moore238@example.com,+1-496-339-6224,9561 Pine St,Seattle,WA,98101,USA,2023-02-27,Standard,True
+CUST-1239,Christopher,Davis,christopher.davis239@example.com,+1-623-407-5508,1098 Pine St,Chicago,IL,60601,USA,2023-05-27,VIP,True
+CUST-1240,Donna,Lewis,invalid_email_240_at_example,+1-552-758-7244,8692 Broadway,Austin,TX,78701,USA,2024-03-13,Premium,True
+CUST-1241,Anthony,Wilson,anthony.wilson241@example.com,+1-750-584-4948,3792 Broadway,Austin,TX,78701,USA,2023-11-04,Premium,True
+CUST-1242,Elizabeth,Sanchez,elizabeth.sanchez242@example.com,+1-626-670-9683,2296 Oak Blvd,Atlanta,GA,30301,USA,2023-03-01,Premium,True
+CUST-1243,Jessica,Rodriguez,jessica.rodriguez243@example.com,+1-660-967-7079,1614 Pine St,Seattle,WA,98101,USA,2023-12-05,VIP,False
+CUST-1244,Richard,Johnson,richard.johnson244@example.com,+1-240-994-2192,3182 Pine St,Chicago,IL,60601,USA,2024-01-22,VIP,True
+CUST-1245,Emily,Miller,emily.miller245@example.com,+1-215-316-4113,2022 Oak Blvd,Atlanta,GA,30301,USA,2023-08-02,Standard,True
+CUST-1246,Jessica,Thompson,jessica.thompson246@example.com,+1-765-429-5637,6336 Oak Blvd,Portland,OR,97201,USA,2023-07-29,Premium,True
+CUST-1247,Paul,Lee,paul.lee247@example.com,+1-709-577-2615,7792 Broadway,Boston,MA,02108,USA,2023-11-12,Standard,True
+CUST-1248,Susan,Lopez,susan.lopez248@example.com,+1-426-859-3390,365 Broadway,Boston,MA,02108,USA,2024-02-28,Standard,True
+CUST-1249,Emily,Robinson,emily.robinson249@example.com,+1-356-300-6404,3868 Oak Blvd,Portland,OR,97201,USA,2024-08-16,VIP,True
+CUST-1250,Andrew,Clark,andrew.clark250@example.com,+1-901-445-5216,8105 Oak Blvd,Seattle,WA,98101,USA,2024-05-26,Premium,True
