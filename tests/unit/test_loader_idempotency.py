@@ -1,21 +1,20 @@
-"""
-Unit & Idempotency Tests for Data Warehouse Loader.
-"""
+"""Unit tests for warehouse merge and idempotency behavior."""
 
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
+
+from sqlalchemy import event
 from sqlalchemy.orm import Session
+
 from app.warehouse.loader import WarehouseLoader
 from app.warehouse.models import DimCustomer
 
 
-def test_warehouse_loader_idempotency_customers(test_db_session: Session):
-    loader = WarehouseLoader()
-
-    customer_dict = {
+def _customer(customer_id: str = "CUST-1001") -> dict:
+    return {
         "customer_key": 1001,
-        "customer_id": "CUST-1001",
+        "customer_id": customer_id,
         "first_name": "Bob",
         "last_name": "Marley",
         "full_name": "Bob Marley",
@@ -33,66 +32,65 @@ def test_warehouse_loader_idempotency_customers(test_db_session: Session):
         "is_active": True,
         "ingested_at": "2023-02-01T00:00:00Z",
         "record_hash": "testhash12345",
-        "updated_at": datetime.now(timezone.utc)
+        "updated_at": datetime(2023, 2, 1, tzinfo=timezone.utc),
     }
 
-    # First load
-    ins, upd, unch = loader.load_customers(test_db_session, [customer_dict])
-    test_db_session.commit()
-    assert ins == 1
-    assert upd == 0
-    assert unch == 0
 
-    assert test_db_session.query(DimCustomer).count() == 1
-
-    # Second load (identical data)
-    ins2, upd2, unch2 = loader.load_customers(test_db_session, [customer_dict])
-    test_db_session.commit()
-    assert ins2 == 0
-    assert upd2 == 0
-    assert unch2 == 1
-
-    assert test_db_session.query(DimCustomer).count() == 1
-
-
-def test_warehouse_loader_update_changed_record(test_db_session: Session):
+def test_identical_customer_load_is_idempotent(test_db_session: Session):
     loader = WarehouseLoader()
+    customer = _customer()
 
-    customer_dict = {
-        "customer_key": 1002,
-        "customer_id": "CUST-1002",
-        "first_name": "Charlie",
-        "last_name": "Brown",
-        "full_name": "Charlie Brown",
-        "email": "charlie@example.com",
-        "city": "Austin",
-        "state": "TX",
-        "postal_code": "78701",
-        "country": "USA",
-        "signup_date": date(2023, 3, 1),
-        "signup_year": 2023,
-        "signup_month": 3,
-        "customer_segment": "Standard",
-        "is_active": True,
-        "ingested_at": "2023-03-01T00:00:00Z",
-        "record_hash": "originalhash",
-        "updated_at": datetime.now(timezone.utc)
-    }
-
-    loader.load_customers(test_db_session, [customer_dict])
+    first = loader.load_customers(test_db_session, [customer])
+    test_db_session.commit()
+    second = loader.load_customers(test_db_session, [customer])
     test_db_session.commit()
 
-    modified = customer_dict.copy()
-    modified["email"] = "charlie.new@example.com"
-    modified["record_hash"] = "newupdatedhash"
-
-    ins, upd, unch = loader.load_customers(test_db_session, [modified])
-    test_db_session.commit()
-    assert ins == 0
-    assert upd == 1
-    assert unch == 0
-
-    cust_row = test_db_session.query(DimCustomer).filter_by(customer_id="CUST-1002").first()
-    assert cust_row.email == "charlie.new@example.com"
-    assert cust_row.record_hash == "newupdatedhash"
+    assert first == (1, 0, 0), "First load should insert one dimension row."
+    assert second == (0, 0, 1), "Repeated identical input should remain unchanged."
     assert test_db_session.query(DimCustomer).count() == 1
+
+
+def test_changed_customer_record_updates_existing_row(test_db_session: Session):
+    loader = WarehouseLoader()
+    customer = _customer("CUST-1002")
+    loader.load_customers(test_db_session, [customer])
+    test_db_session.commit()
+
+    updated = {**customer, "email": "bob.updated@example.com", "record_hash": "new-hash"}
+    counts = loader.load_customers(test_db_session, [updated])
+    test_db_session.commit()
+
+    stored = test_db_session.query(DimCustomer).filter_by(customer_id="CUST-1002").one()
+    assert counts == (0, 1, 0), "Changed input should update the existing dimension row."
+    assert stored.email == "bob.updated@example.com"
+    assert stored.record_hash == "new-hash"
+    assert test_db_session.query(DimCustomer).count() == 1
+
+
+def test_customer_batch_uses_bounded_selects_instead_of_one_lookup_per_row(
+    test_db_session: Session, test_engine
+):
+    loader = WarehouseLoader()
+    customers = [
+        {**_customer(f"CUST-BATCH-{index:03d}"), "customer_key": 2000 + index}
+        for index in range(25)
+    ]
+    select_count = 0
+
+    def count_selects(_connection, _cursor, statement, _parameters, _context, _executemany):
+        nonlocal select_count
+        if statement.lstrip().upper().startswith("SELECT"):
+            select_count += 1
+
+    event.listen(test_engine, "before_cursor_execute", count_selects)
+    try:
+        counts = loader.load_customers(test_db_session, customers)
+        test_db_session.commit()
+    finally:
+        event.remove(test_engine, "before_cursor_execute", count_selects)
+
+    assert counts == (25, 0, 0)
+    assert select_count == 1, (
+        "A customer batch should prefetch existing keys in one SELECT, "
+        "not issue one SELECT per row."
+    )

@@ -71,6 +71,10 @@ class Settings:
     API_HOST: str = os.getenv("API_HOST", "127.0.0.1")
     API_PORT: int = int(os.getenv("API_PORT", "8000"))
     API_BASE_URL: str = os.getenv("API_BASE_URL", f"http://{API_HOST}:{API_PORT}")
+    APP_API_PORT: int = int(os.getenv("APP_API_PORT", "8001"))
+    APP_API_BASE_URL: str = os.getenv(
+        "APP_API_BASE_URL", f"http://{API_HOST}:{APP_API_PORT}"
+    )
     API_TIMEOUT_SECONDS: float = float(os.getenv("API_TIMEOUT_SECONDS", "10.0"))
     API_PAGE_SIZE: int = int(os.getenv("API_PAGE_SIZE", "50"))
 

@@ -10,7 +10,7 @@ SET search_path TO warehouse, public;
 -- Dimension: Customers
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS dim_customers (
-    customer_key INTEGER PRIMARY KEY,
+    customer_key BIGINT PRIMARY KEY,
     customer_id VARCHAR(64) NOT NULL UNIQUE,
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
@@ -41,7 +41,7 @@ CREATE INDEX IF NOT EXISTS idx_dim_cust_seg_state ON dim_customers (customer_seg
 -- Dimension: Products
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS dim_products (
-    product_key INTEGER PRIMARY KEY,
+    product_key BIGINT PRIMARY KEY,
     product_id VARCHAR(64) NOT NULL UNIQUE,
     product_name VARCHAR(256) NOT NULL,
     category VARCHAR(128) NOT NULL,
@@ -77,9 +77,9 @@ CREATE INDEX IF NOT EXISTS idx_dim_date_quarter ON dim_date (quarter);
 -- Fact: Orders
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS fact_orders (
-    order_key INTEGER PRIMARY KEY,
+    order_key BIGINT PRIMARY KEY,
     order_id VARCHAR(64) NOT NULL UNIQUE,
-    customer_key INTEGER NOT NULL REFERENCES dim_customers(customer_key),
+    customer_key BIGINT NOT NULL REFERENCES dim_customers(customer_key),
     customer_id VARCHAR(64) NOT NULL,
     order_date_key INTEGER NOT NULL REFERENCES dim_date(date_key),
     order_timestamp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
@@ -106,12 +106,12 @@ CREATE INDEX IF NOT EXISTS idx_fact_orders_status_date ON fact_orders (status, o
 -- Fact: Order Items
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS fact_order_items (
-    order_item_key INTEGER PRIMARY KEY,
-    order_key INTEGER NOT NULL REFERENCES fact_orders(order_key) ON DELETE CASCADE,
+    order_item_key BIGINT PRIMARY KEY,
+    order_key BIGINT NOT NULL REFERENCES fact_orders(order_key) ON DELETE CASCADE,
     order_id VARCHAR(64) NOT NULL,
-    product_key INTEGER NOT NULL REFERENCES dim_products(product_key),
+    product_key BIGINT NOT NULL REFERENCES dim_products(product_key),
     product_id VARCHAR(64) NOT NULL,
-    customer_key INTEGER NOT NULL REFERENCES dim_customers(customer_key),
+    customer_key BIGINT NOT NULL REFERENCES dim_customers(customer_key),
     order_date_key INTEGER NOT NULL REFERENCES dim_date(date_key),
     quantity INTEGER NOT NULL CHECK (quantity > 0),
     unit_price NUMERIC(10, 2) NOT NULL CHECK (unit_price > 0),

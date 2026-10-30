@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     Column,
     Date,
@@ -37,7 +38,7 @@ class DimCustomer(Base):
     """Customer Dimension Table."""
     __tablename__ = "dim_customers"
 
-    customer_key = Column(Integer, primary_key=True, autoincrement=False)
+    customer_key = Column(BigInteger, primary_key=True, autoincrement=False)
     customer_id = Column(String(64), nullable=False, unique=True, index=True)
     first_name = Column(String(128), nullable=False)
     last_name = Column(String(128), nullable=False)
@@ -69,7 +70,7 @@ class DimProduct(Base):
     """Product Dimension Table."""
     __tablename__ = "dim_products"
 
-    product_key = Column(Integer, primary_key=True, autoincrement=False)
+    product_key = Column(BigInteger, primary_key=True, autoincrement=False)
     product_id = Column(String(64), nullable=False, unique=True, index=True)
     product_name = Column(String(256), nullable=False)
     category = Column(String(128), nullable=False, index=True)
@@ -103,9 +104,9 @@ class FactOrder(Base):
     """Orders Fact Table."""
     __tablename__ = "fact_orders"
 
-    order_key = Column(Integer, primary_key=True, autoincrement=False)
+    order_key = Column(BigInteger, primary_key=True, autoincrement=False)
     order_id = Column(String(64), nullable=False, unique=True, index=True)
-    customer_key = Column(Integer, ForeignKey("dim_customers.customer_key"), nullable=False, index=True)
+    customer_key = Column(BigInteger, ForeignKey("dim_customers.customer_key"), nullable=False, index=True)
     customer_id = Column(String(64), nullable=False)
     order_date_key = Column(Integer, ForeignKey("dim_date.date_key"), nullable=False, index=True)
     order_timestamp = Column(DateTime, nullable=False, index=True)
@@ -135,12 +136,12 @@ class FactOrderItem(Base):
     """Order Line Items Fact Table."""
     __tablename__ = "fact_order_items"
 
-    order_item_key = Column(Integer, primary_key=True, autoincrement=False)
-    order_key = Column(Integer, ForeignKey("fact_orders.order_key"), nullable=False, index=True)
+    order_item_key = Column(BigInteger, primary_key=True, autoincrement=False)
+    order_key = Column(BigInteger, ForeignKey("fact_orders.order_key"), nullable=False, index=True)
     order_id = Column(String(64), nullable=False, index=True)
-    product_key = Column(Integer, ForeignKey("dim_products.product_key"), nullable=False, index=True)
+    product_key = Column(BigInteger, ForeignKey("dim_products.product_key"), nullable=False, index=True)
     product_id = Column(String(64), nullable=False)
-    customer_key = Column(Integer, ForeignKey("dim_customers.customer_key"), nullable=False)
+    customer_key = Column(BigInteger, ForeignKey("dim_customers.customer_key"), nullable=False)
     order_date_key = Column(Integer, ForeignKey("dim_date.date_key"), nullable=False)
     quantity = Column(Integer, nullable=False)
     unit_price = Column(Float, nullable=False)

@@ -39,6 +39,7 @@ It returns the ``PipelineRun`` ORM instance for further inspection.
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 import time
 from datetime import datetime, timezone
@@ -57,9 +58,155 @@ from app.warehouse.models import (
     FactOrder,
     FactOrderItem,
     PipelineRun,
+    QuarantineRecord,
 )
 
 logger = logging.getLogger(__name__)
+
+
+class WarehouseLoader:
+    """Persistence adapter used by the end-to-end pipeline orchestrator."""
+
+    def init_schema(self) -> None:
+        from app.warehouse.connection import Base, engine
+        from app.warehouse import models  # noqa: F401
+
+        Base.metadata.create_all(bind=engine)
+
+    @staticmethod
+    def _merge_rows(
+        session: Session, model: Any, rows: Iterable[Dict[str, Any]]
+    ) -> tuple[int, int, int]:
+        def values_match(current: Any, incoming: Any) -> bool:
+            if isinstance(current, datetime) and isinstance(incoming, datetime):
+                current_utc = (
+                    current.replace(tzinfo=timezone.utc)
+                    if current.tzinfo is None
+                    else current.astimezone(timezone.utc)
+                )
+                incoming_utc = (
+                    incoming.replace(tzinfo=timezone.utc)
+                    if incoming.tzinfo is None
+                    else incoming.astimezone(timezone.utc)
+                )
+                return current_utc == incoming_utc
+            return current == incoming
+
+        row_values = list(rows)
+        if not row_values:
+            return 0, 0, 0
+
+        primary_key = next(iter(model.__table__.primary_key.columns)).key
+        existing_by_key: Dict[Any, Any] = {}
+        keys = list(dict.fromkeys(values[primary_key] for values in row_values))
+        for offset in range(0, len(keys), 500):
+            key_batch = keys[offset : offset + 500]
+            existing_rows = session.scalars(
+                select(model).where(getattr(model, primary_key).in_(key_batch))
+            )
+            existing_by_key.update(
+                (getattr(existing, primary_key), existing) for existing in existing_rows
+            )
+
+        inserted = updated = unchanged = 0
+        new_rows = []
+        for values in row_values:
+            row_key = values[primary_key]
+            existing = existing_by_key.get(row_key)
+            if existing is None:
+                inserted += 1
+                existing = model(**values)
+                existing_by_key[row_key] = existing
+                new_rows.append(existing)
+            else:
+                changed = any(
+                    not values_match(getattr(existing, key), value)
+                    for key, value in values.items()
+                )
+                if changed:
+                    updated += 1
+                else:
+                    unchanged += 1
+                    continue
+                for key, value in values.items():
+                    setattr(existing, key, value)
+        if new_rows:
+            session.add_all(new_rows)
+        return inserted, updated, unchanged
+
+    def load_products(self, session: Session, rows: List[Dict[str, Any]]) -> Tuple[int, int]:
+        inserted, updated, _ = self._merge_rows(session, DimProduct, rows)
+        return inserted, updated
+
+    def load_customers(self, session: Session, rows: List[Dict[str, Any]]) -> Tuple[int, int, int]:
+        return self._merge_rows(session, DimCustomer, rows)
+
+    def load_date_dimension(self, session: Session, rows: List[Dict[str, Any]]) -> int:
+        inserted, _, _ = self._merge_rows(session, DimDate, rows)
+        return inserted
+
+    def load_orders_and_items(
+        self,
+        session: Session,
+        orders: List[Dict[str, Any]],
+        items: List[Dict[str, Any]],
+    ) -> Tuple[int, int, int]:
+        inserted, updated, unchanged = self._merge_rows(session, FactOrder, orders)
+        _, item_updates, item_unchanged = self._merge_rows(session, FactOrderItem, items)
+        return inserted, updated + item_updates, unchanged + item_unchanged
+
+    def load_quarantine_records(
+        self, session: Session, run_id: str, records: List[Dict[str, Any]]
+    ) -> int:
+        for record in records:
+            raw_payload = record["raw_payload"]
+            if not isinstance(raw_payload, str):
+                raw_payload = json.dumps(raw_payload, default=str)
+            quarantined_at = record.get("quarantined_at")
+            if isinstance(quarantined_at, str):
+                quarantined_at = datetime.fromisoformat(quarantined_at.replace("Z", "+00:00"))
+            session.add(
+                QuarantineRecord(
+                    run_id=run_id,
+                    record_id=record["record_id"],
+                    source_system=record["source_system"],
+                    error_type=record["error_type"],
+                    rule_code=record["rule_code"],
+                    field_name=record.get("field_name"),
+                    error_message=record["error_message"],
+                    raw_payload=raw_payload,
+                    quarantined_at=quarantined_at or datetime.now(timezone.utc),
+                )
+            )
+        return len(records)
+
+    @staticmethod
+    def record_pipeline_run(
+        session: Session,
+        run_id: str,
+        pipeline_name: str,
+        start_time: datetime,
+        end_time: datetime,
+        status: str,
+        records_ingested: int,
+        valid_records_loaded: int,
+        quarantined_records: int,
+        details_json: str,
+    ) -> None:
+        session.merge(
+            PipelineRun(
+                run_id=run_id,
+                pipeline_name=pipeline_name,
+                start_time=start_time,
+                end_time=end_time,
+                duration_seconds=(end_time - start_time).total_seconds(),
+                status=status,
+                records_ingested=records_ingested,
+                valid_records_loaded=valid_records_loaded,
+                quarantined_records=quarantined_records,
+                details_json=details_json,
+            )
+        )
 
 # ---------------------------------------------------------------------------
 # Helper utilities – deterministic surrogate key generation
@@ -68,12 +215,11 @@ logger = logging.getLogger(__name__)
 def _surrogate_key(business_key: str) -> int:
     """Return a deterministic integer surrogate key for a given business key.
 
-    The first 16 hex digits of the SHA‑256 hash are interpreted as an integer and
-    reduced to the PostgreSQL 32‑bit signed integer range.  Collisions are highly
-    unlikely for the dataset sizes we handle.
+    The first 16 hex digits of the SHA-256 hash are reduced to a positive
+    PostgreSQL signed 64-bit integer.
     """
     h = hashlib.sha256(business_key.encode()).hexdigest()[:16]
-    return int(h, 16) % (2**31)
+    return int(h, 16) % ((1 << 63) - 1)
 
 # ---------------------------------------------------------------------------
 # Pipeline run state enumeration (stored as plain strings in the DB)

@@ -31,6 +31,18 @@ def test_surrogate_key_generation_deterministic():
     assert key1 != key3
 
 
+def test_surrogate_keys_support_large_dimensions_without_32_bit_collisions():
+    keys = {
+        DimensionalTransformer.generate_surrogate_key("CUST", f"BENCH-C-{index:07d}")
+        for index in range(1, 50_001)
+    }
+
+    assert len(keys) == 50_000, (
+        "The benchmark-scale customer key set must not collide in the warehouse PK."
+    )
+    assert max(keys) > 2**31 - 1, "Surrogate keys should use the expanded 64-bit range."
+
+
 def test_build_date_dimension_record():
     test_dt = date(2023, 10, 31)
     dim_d = DimensionalTransformer.build_date_dimension_record(test_dt)

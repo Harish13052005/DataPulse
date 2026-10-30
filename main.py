@@ -5,7 +5,8 @@ Usage:
     python main.py                   # Run application health check and system diagnostic
     python main.py --health          # Explicit health check
     python main.py --pipeline        # Trigger ELT pipeline execution
-    python main.py --api             # Launch mock REST API server
+    python main.py --api             # Launch the DataPulse application API
+    python main.py --source-api      # Launch the mock order-source API
     python main.py --dashboard       # Launch Streamlit dashboard
 """
 
@@ -105,7 +106,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=f"{settings.APP_NAME} Platform CLI")
     parser.add_argument("--health", action="store_true", help="Run application health check")
     parser.add_argument("--pipeline", action="store_true", help="Run the DataPulse ELT pipeline")
-    parser.add_argument("--api", action="store_true", help="Launch mock REST API server")
+    parser.add_argument("--api", action="store_true", help="Launch the application API server")
+    parser.add_argument("--source-api", action="store_true", help="Launch mock order-source API server")
     parser.add_argument("--dashboard", action="store_true", help="Launch Streamlit dashboard")
     args = parser.parse_args()
 
@@ -114,8 +116,12 @@ def main() -> None:
         run_pipe()
     elif args.api:
         import uvicorn
-        print(f"Starting {settings.APP_NAME} REST API on http://{settings.API_HOST}:{settings.API_PORT}...")
-        uvicorn.run("app.api.app:app", host=settings.API_HOST, port=settings.API_PORT, reload=True)
+        print(f"Starting {settings.APP_NAME} application API on http://{settings.API_HOST}:{settings.APP_API_PORT}...")
+        uvicorn.run("app.api.app:app", host=settings.API_HOST, port=settings.APP_API_PORT, reload=True)
+    elif args.source_api:
+        import uvicorn
+        print(f"Starting {settings.APP_NAME} mock source API on http://{settings.API_HOST}:{settings.API_PORT}...")
+        uvicorn.run("app.api.mock_app:app", host=settings.API_HOST, port=settings.API_PORT, reload=True)
     elif args.dashboard:
         import subprocess
         print(f"Starting {settings.APP_NAME} Dashboard on port 8501...")

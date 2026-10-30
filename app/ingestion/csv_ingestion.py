@@ -89,7 +89,7 @@ class CustomerCSVIngestor:
         self._error_count = 0
         try:
             with self.file_path.open("r", encoding="utf-8-sig") as f:
-                reader = csv.DictReader(f)
+                reader = csv.DictReader(f, strict=True)
                 for idx, row in enumerate(reader, start=1):
                     try:
                         records.append(self._process_row(row, idx, ingested_at))

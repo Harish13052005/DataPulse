@@ -25,11 +25,11 @@ class DimensionalTransformer:
 
     @staticmethod
     def generate_surrogate_key(*keys: Any) -> int:
-        """Generate deterministic 32-bit integer surrogate key from natural key inputs."""
+        """Generate a deterministic positive 63-bit surrogate key."""
         raw = ":".join(str(k) for k in keys)
         h = hashlib.sha256(raw.encode("utf-8")).digest()
-        val = int.from_bytes(h[:4], byteorder="big", signed=False)
-        return val % 2147483647
+        val = int.from_bytes(h[:8], byteorder="big", signed=False)
+        return val % ((1 << 63) - 1)
 
     @staticmethod
     def build_date_dimension_record(dt: datetime | date) -> Dict[str, Any]:

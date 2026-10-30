@@ -24,14 +24,14 @@ services:
       start_period: 10s
 
   # ---------------------------------------------------------------------------
-  # Service 2: Mock Orders REST API (FastAPI)
+  # Service 2: Mock source API used only for order ingestion
   # ---------------------------------------------------------------------------
   api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: datapulse-api
-    command: uvicorn app.api.app:app --host 0.0.0.0 --port 8000
+    command: uvicorn app.api.mock_app:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     environment:
@@ -39,6 +39,29 @@ services:
       - RANDOM_SEED=42
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # Service 2b: Warehouse-facing DataPulse application API
+  # ---------------------------------------------------------------------------
+  application-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: datapulse-application-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: uvicorn app.api.app:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+    environment:
+      - APP_ENV=production
+      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER:-datapulse}:${POSTGRES_PASSWORD:-datapulse_secure_pass}@postgres:5432/${POSTGRES_DB:-datapulse_dw}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -76,10 +99,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      application-api:
+        condition: service_healthy
     ports:
       - "8501:8501"
     environment:
       - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER:-datapulse}:${POSTGRES_PASSWORD:-datapulse_secure_pass}@postgres:5432/${POSTGRES_DB:-datapulse_dw}
+      - APP_API_BASE_URL=http://application-api:8001
       - RANDOM_SEED=42
     command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
     volumes:

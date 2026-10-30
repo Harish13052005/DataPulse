@@ -96,12 +96,12 @@ class AnalyticsQueries:
                     COUNT(o.order_key) AS total_orders,
                     SUM(CASE WHEN o.status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_orders,
                     SUM(CASE WHEN o.status = 'REFUNDED' THEN 1 ELSE 0 END) AS refunded_orders,
-                    ROUND(SUM(o.subtotal), 2) AS gross_revenue,
-                    ROUND(SUM(o.discount_amount), 2) AS total_discounts,
-                    ROUND(SUM(o.tax_amount), 2) AS total_taxes,
-                    ROUND(SUM(o.shipping_fee), 2) AS total_shipping,
-                    ROUND(SUM(o.net_amount), 2) AS net_revenue,
-                    ROUND(AVG(o.net_amount), 2) AS average_order_value
+                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.subtotal ELSE 0 END), 2) AS gross_revenue,
+                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.discount_amount ELSE 0 END), 2) AS total_discounts,
+                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.tax_amount ELSE 0 END), 2) AS total_taxes,
+                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.shipping_fee ELSE 0 END), 2) AS total_shipping,
+                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.net_amount ELSE 0 END), 2) AS net_revenue,
+                    ROUND(AVG(CASE WHEN o.status = 'COMPLETED' THEN o.net_amount ELSE NULL END), 2) AS average_order_value
                 FROM fact_orders o
                 JOIN dim_date d ON o.order_date_key = d.date_key
                 GROUP BY d.year, d.month_num

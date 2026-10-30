@@ -61,6 +61,8 @@ def create_db_engine(database_url: str | None = None) -> Engine:
 # Default application engine and sessionmaker
 engine = create_db_engine()
 SessionFactory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+# Compatibility alias for the original loader entry point.
+SessionLocal = SessionFactory
 
 
 @contextmanager

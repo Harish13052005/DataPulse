@@ -1,0 +1,115 @@
+{
+  "benchmark": "DataPulse pipeline stage benchmark",
+  "run_timestamp": "2026-10-30T16:22:54.465533+00:00",
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 142 Stepping 9, GenuineIntel",
+    "sqlalchemy": "2.1.6"
+  },
+  "repeats": 1,
+  "peak_working_set_bytes": 891232256,
+  "optimization": "batch primary-key lookup and add_all warehouse loading",
+  "methodology": "Deterministic generated data; CSV file ingestion and in-process paginated order response parsing; identical stage outputs reused for baseline/optimized loading; fresh temporary SQLite database per variant.",
+  "results": [
+    {
+      "requested_record_count": 1000,
+      "source_record_count": 1000,
+      "customer_records": 500,
+      "order_records": 500,
+      "valid_records": 1000,
+      "order_line_records": 500,
+      "dataset_sha256": "38fdb0fb98171dde910606a6d101a2be31e05f7645751b0091a0058924e4fdb8",
+      "baseline": {
+        "ingestion_seconds": 0.0725112003274262,
+        "validation_seconds": 0.07586729992181063,
+        "transformation_seconds": 0.04251500032842159,
+        "warehouse_loading_seconds": 3.0294413999654353,
+        "warehouse_loading_repeats_seconds": [
+          3.0294413999654353
+        ],
+        "total_execution_seconds": 3.2203349005430937,
+        "records_processed_per_second": 310.53
+      },
+      "optimized": {
+        "ingestion_seconds": 0.0725112003274262,
+        "validation_seconds": 0.07586729992181063,
+        "transformation_seconds": 0.04251500032842159,
+        "warehouse_loading_seconds": 1.1888314001262188,
+        "warehouse_loading_repeats_seconds": [
+          1.1888314001262188
+        ],
+        "total_execution_seconds": 1.3797249007038772,
+        "records_processed_per_second": 724.78
+      },
+      "warehouse_load_speedup": 2.55,
+      "total_speedup": 2.33
+    },
+    {
+      "requested_record_count": 10000,
+      "source_record_count": 10000,
+      "customer_records": 5000,
+      "order_records": 5000,
+      "valid_records": 10000,
+      "order_line_records": 5000,
+      "dataset_sha256": "fcaae7d5f3a37190cdc42bbaa779a74412e9641f65b8657ce02e06b522a5e6b8",
+      "baseline": {
+        "ingestion_seconds": 0.48026910005137324,
+        "validation_seconds": 0.6963655999861658,
+        "transformation_seconds": 0.413652699906379,
+        "warehouse_loading_seconds": 21.264450199902058,
+        "warehouse_loading_repeats_seconds": [
+          21.264450199902058
+        ],
+        "total_execution_seconds": 22.854737599845976,
+        "records_processed_per_second": 437.55
+      },
+      "optimized": {
+        "ingestion_seconds": 0.48026910005137324,
+        "validation_seconds": 0.6963655999861658,
+        "transformation_seconds": 0.413652699906379,
+        "warehouse_loading_seconds": 4.364341899752617,
+        "warehouse_loading_repeats_seconds": [
+          4.364341899752617
+        ],
+        "total_execution_seconds": 5.954629299696535,
+        "records_processed_per_second": 1679.37
+      },
+      "warehouse_load_speedup": 4.87,
+      "total_speedup": 3.84
+    },
+    {
+      "requested_record_count": 100000,
+      "source_record_count": 100000,
+      "customer_records": 50000,
+      "order_records": 50000,
+      "valid_records": 100000,
+      "order_line_records": 50000,
+      "dataset_sha256": "1f75f0e9e40645d1577ec7fde7f56542c4eb1efd2a814ae14538935fe3ee2860",
+      "baseline": {
+        "ingestion_seconds": 4.352876000106335,
+        "validation_seconds": 6.462101799901575,
+        "transformation_seconds": 4.276378499809653,
+        "warehouse_loading_seconds": 220.31145199993625,
+        "warehouse_loading_repeats_seconds": [
+          220.31145199993625
+        ],
+        "total_execution_seconds": 235.40280829975381,
+        "records_processed_per_second": 424.8
+      },
+      "optimized": {
+        "ingestion_seconds": 4.352876000106335,
+        "validation_seconds": 6.462101799901575,
+        "transformation_seconds": 4.276378499809653,
+        "warehouse_loading_seconds": 33.62474239990115,
+        "warehouse_loading_repeats_seconds": [
+          33.62474239990115
+        ],
+        "total_execution_seconds": 48.716098699718714,
+        "records_processed_per_second": 2052.71
+      },
+      "warehouse_load_speedup": 6.55,
+      "total_speedup": 4.83
+    }
+  ]
+}

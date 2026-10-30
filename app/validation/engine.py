@@ -30,7 +30,7 @@ from pydantic import ValidationError
 
 from app.config.settings import settings
 from .schemas import CustomerRawSchema, OrderRawSchema, LineItemRawSchema
-from .ingestion_meta import RunMetadata, IngestionResult
+from app.ingestion.ingestion_meta import IngestionResult, RunMetadata
 from app.api.data_generator import PRODUCT_CATALOG
 
 logger = logging.getLogger(__name__)
@@ -178,7 +178,14 @@ def validate_orders(
 
         # 5. Validate each line item
         line_errors = False
+        seen_item_ids: Set[str] = set()
         for item in order.items:
+            if item.item_id in seen_item_ids:
+                reason = f"Duplicate item_id in order: {item.item_id}"
+                _write_quarantine(rec, "orders", run_meta.run_id, reason)
+                line_errors = True
+                break
+            seen_item_ids.add(item.item_id)
             # Verify product_id exists
             if item.product_id not in valid_product_ids:
                 reason = f"Invalid product_id in line item: {item.product_id}"
