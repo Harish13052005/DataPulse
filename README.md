@@ -20,7 +20,12 @@ API and a Streamlit dashboard.
 > is implemented and tested; deployment, security, and scale claims should be
 > evaluated against your own environment.
 
-[Quick start](#quick-start) · [Architecture](#architecture) · [Railway deployment](#railway-deployment) · [Docker Compose](#docker-setup) · [Tests](#automated-tests)
+**Live deployment:** [Dashboard](https://datapulse-dashboard-y7a5.onrender.com) ·
+[API](https://datapulse-api-e3s3.onrender.com) ·
+[Interactive API docs](https://datapulse-api-e3s3.onrender.com/docs) ·
+[API health](https://datapulse-api-e3s3.onrender.com/health)
+
+[Quick start](#quick-start) · [Architecture](#architecture) · [Live deployment](#live-deployment-render--neon) · [Docker Compose](#docker-setup) · [Tests](#automated-tests)
 
 ## Contents
 
@@ -41,7 +46,7 @@ API and a Streamlit dashboard.
 - [Pipeline execution](#pipeline-execution)
 - [API startup](#application-api-startup)
 - [Dashboard startup](#dashboard-startup)
-- [Railway deployment](#railway-deployment)
+- [Live deployment (Render + Neon)](#live-deployment-render--neon)
 - [Tests](#automated-tests)
 - [Performance benchmark](#performance-benchmark)
 - [Sample analytical results](#sample-analytical-results)
@@ -82,7 +87,7 @@ mock order source in-process; starting the separate source API is optional:
 python main.py --source-api
 ```
 
-For PostgreSQL, Docker Compose, or Railway deployment, see the corresponding
+For PostgreSQL, Docker Compose, or hosted deployment, see the corresponding
 sections below. Check the current environment and database connection with
 `python main.py --health`.
 
@@ -322,13 +327,13 @@ reads the following variables from `app/config/settings.py`:
 container; the application does not construct its database URL from them.
 Never commit credentials. Compose defaults are for local evaluation only.
 
-In Railway, explicitly set `DATABASE_URL` to the Railway PostgreSQL service's
-connection variable. The Docker image includes `.env.example`, and settings
-load it when `.env` is absent; that example sets SQLite as the default. Do not
-let a production service silently use the container-local SQLite file. Set
-`APP_API_BASE_URL` on the dashboard to the application API's private Railway
-URL. See [Railway deployment](#railway-deployment) and the detailed
-[`DEPLOYMENT.md`](DEPLOYMENT.md).
+For hosted deployments, explicitly set `DATABASE_URL` to a PostgreSQL connection
+URI. The Docker image includes `.env.example`, and settings load it when `.env`
+is absent; that example sets SQLite as the default. Do not let a production
+service silently use the container-local SQLite file. Set
+`APP_API_BASE_URL` on the dashboard to the deployed application API URL. See
+[Live deployment](#live-deployment-render--neon) and the
+[`DEPLOYMENT.md`](DEPLOYMENT.md) Railway deployment plan.
 
 ## Database initialization
 
@@ -454,26 +459,37 @@ The sidebar navigates between Overview, Pipeline Monitoring, Data Quality,
 Business Analytics, Data Explorer, and System Health. When no warehouse data
 exists, the dashboard displays empty states rather than fabricated measures.
 
-## Railway deployment
+## Live deployment (Render + Neon)
 
-The Railway deployment plan is documented in
-[`DEPLOYMENT.md`](DEPLOYMENT.md), including exact service settings, start
-commands, environment-variable references, health paths, and persistence
-limits. In brief, deploy Railway PostgreSQL, the warehouse API, and the
-dashboard from the repository root using the existing `Dockerfile`. Override
-the Dockerfile's one-shot pipeline default with web-service commands that bind
-to `0.0.0.0` and Railway's assigned `PORT`.
+The current free hosted deployment uses Render for the web services and Neon
+for persistent PostgreSQL storage:
 
-The API and dashboard need an explicit Railway PostgreSQL `DATABASE_URL`;
-configure their internal communication using Railway private networking. The
-dashboard needs `APP_API_BASE_URL` pointing to the API's private address. The
-pipeline is optional (it can be scheduled separately), and the mock source API
-is also optional because normal pipeline ingestion uses its in-process ASGI
-transport. Generated quarantine files, reports, and logs use local filesystem
-paths and are not durable across service replacement; the warehouse itself
-must use Railway PostgreSQL. Railway deploys the selected GitHub branch, so
-commit and push the changes intended for deployment first; uncommitted local
-changes are not included.
+| Service | Live URL |
+|---|---|
+| Streamlit dashboard | [datapulse-dashboard-y7a5.onrender.com](https://datapulse-dashboard-y7a5.onrender.com) |
+| FastAPI application API | [datapulse-api-e3s3.onrender.com](https://datapulse-api-e3s3.onrender.com) |
+| Interactive API docs (Swagger UI) | [API `/docs`](https://datapulse-api-e3s3.onrender.com/docs) |
+| API health (includes database check) | [`/health`](https://datapulse-api-e3s3.onrender.com/health) |
+
+Both Render services use the repository-root `Dockerfile` and the tracked
+`main` branch. The API starts with
+`uvicorn app.api.app:app --host 0.0.0.0 --port $PORT`; the dashboard starts
+with `streamlit run dashboard/app.py --server.address 0.0.0.0 --server.port $PORT`.
+Set `DATABASE_URL` to the Neon PostgreSQL connection URI on both services and
+set the dashboard's `APP_API_BASE_URL` to the API URL above. The API creates
+missing ORM tables at startup; it does not migrate existing schemas.
+
+**Free-tier and security notes:** Render Free services can sleep when idle and
+have ephemeral local filesystems. Neon provides the persistent warehouse;
+generated local quarantine exports and logs are not durable. Render Free
+services use the API's public URL rather than private service networking, and
+the current API does not provide authentication or authorization. Treat the
+hosted API as a public demo, not a production-secured service. The free
+dashboard and API may take time to wake after inactivity.
+
+The earlier [Railway deployment report](DEPLOYMENT.md) remains available as an
+alternative deployment plan; its configuration is not the active hosting
+setup.
 
 ## Automated tests
 
@@ -607,10 +623,11 @@ representative interface captures, not static mockups or production data.
 - The database loader and API are not a substitute for a managed migration,
   authentication, authorization, rate limiting, or secrets-management strategy.
 - The default development launchers use fixed local ports and bind settings;
-  Railway deployments must override the start commands to bind to `0.0.0.0`
-  and the assigned `PORT`. See [`DEPLOYMENT.md`](DEPLOYMENT.md).
-- Railway's production warehouse must use Railway PostgreSQL; SQLite stored
-  inside an application container is not durable across replacement.
+  hosted deployments must override start commands to bind to `0.0.0.0` and the
+  assigned `PORT`. See the [live deployment](#live-deployment-render--neon)
+  settings and [`DEPLOYMENT.md`](DEPLOYMENT.md).
+- Hosted services must use managed PostgreSQL; SQLite stored inside an
+  application container is not durable across replacement.
 - The benchmark uses SQLite and generated records; it excludes network transport,
   data generation, schema creation, quarantine export, and audit persistence.
   Results do not predict PostgreSQL or production throughput.
@@ -642,4 +659,4 @@ representative interface captures, not static mockups or production data.
 - [Measured performance report](docs/PERFORMANCE_REPORT.md)
 - [Design decisions](docs/DESIGN_DECISIONS.md)
 - [Data model reference](docs/DATA_MODEL.md)
-- [Railway deployment report and instructions](DEPLOYMENT.md)
+- [Railway deployment report and alternative plan](DEPLOYMENT.md)
