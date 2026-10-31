@@ -50,6 +50,7 @@ from sqlalchemy import insert, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.transformation.dimensional_transformer import DimensionalTransformer
 from app.warehouse.connection import SessionLocal
 from app.warehouse.models import (
     DimCustomer,
@@ -212,14 +213,14 @@ class WarehouseLoader:
 # Helper utilities – deterministic surrogate key generation
 # ---------------------------------------------------------------------------
 
-def _surrogate_key(business_key: str) -> int:
-    """Return a deterministic integer surrogate key for a given business key.
+def _surrogate_key(*parts: Any) -> int:
+    """Return a deterministic integer surrogate key for a business identifier.
 
-    The first 16 hex digits of the SHA-256 hash are reduced to a positive
-    PostgreSQL signed 64-bit integer.
+    The warehouse must use the same deterministic key generation as the
+    dimensional transformer; otherwise reruns produce mismatched keys and trigger
+    duplicate-row insert failures on unique natural keys.
     """
-    h = hashlib.sha256(business_key.encode()).hexdigest()[:16]
-    return int(h, 16) % ((1 << 63) - 1)
+    return DimensionalTransformer.generate_surrogate_key(*parts)
 
 # ---------------------------------------------------------------------------
 # Pipeline run state enumeration (stored as plain strings in the DB)
@@ -243,7 +244,7 @@ def upsert_dim_customer(session: Session, df: pd.DataFrame) -> Tuple[int, int]:
     """
     inserted = updated = 0
     for _, row in df.iterrows():
-        cust_key = _surrogate_key(row["customer_id"])
+        cust_key = _surrogate_key("CUST", row["customer_id"])
         stmt = insert(DimCustomer).values(
             customer_key=cust_key,
             customer_id=row["customer_id"],
@@ -302,7 +303,7 @@ def upsert_dim_customer(session: Session, df: pd.DataFrame) -> Tuple[int, int]:
 def upsert_dim_product(session: Session, df: pd.DataFrame) -> Tuple[int, int]:
     inserted = updated = 0
     for _, row in df.iterrows():
-        prod_key = _surrogate_key(row["product_id"])
+        prod_key = _surrogate_key("PROD", row["product_id"])
         stmt = insert(DimProduct).values(
             product_key=prod_key,
             product_id=row["product_id"],
@@ -375,11 +376,11 @@ def upsert_fact_order(session: Session, order: Dict[str, Any]) -> int:
 
     Returns the ``order_key`` (surrogate) used for linking line items.
     """
-    order_key = _surrogate_key(order["order_id"])
+    order_key = _surrogate_key("ORD", order["order_id"])
     stmt = insert(FactOrder).values(
         order_key=order_key,
         order_id=order["order_id"],
-        customer_key=_surrogate_key(order["customer_id"]),
+        customer_key=_surrogate_key("CUST", order["customer_id"]),
         customer_id=order["customer_id"],
         order_date_key=int(order["order_timestamp"][:10].replace('-', '')),
         order_timestamp=order["order_timestamp"],
@@ -427,14 +428,14 @@ def upsert_fact_order_items(session: Session, order_key: int, order_id: str, ite
     plus the line index.
     """
     for idx, itm in enumerate(items, start=1):
-        line_key = _surrogate_key(f"{order_id}:{idx}")
+        line_key = _surrogate_key("ITEM", order_id, idx)
         stmt = insert(FactOrderItem).values(
             order_item_key=line_key,
             order_key=order_key,
             order_id=order_id,
-            product_key=_surrogate_key(itm["product_id"]),
+            product_key=_surrogate_key("PROD", itm["product_id"]),
             product_id=itm["product_id"],
-            customer_key=_surrogate_key(itm.get("customer_id", "")),
+            customer_key=_surrogate_key("CUST", itm.get("customer_id", "")),
             order_date_key=int(itm.get("order_timestamp", "1970-01-01")[0:10].replace('-', '')),
             quantity=itm["quantity"],
             unit_price=itm["unit_price"],

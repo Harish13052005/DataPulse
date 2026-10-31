@@ -1,5 +1,13 @@
 # DataPulse
 
+<p align="center">
+  <img src="screenshots/DataPulse.gif" alt="Animated walkthrough of the DataPulse dashboard and API" width="100%">
+</p>
+
+<p align="center">
+  <strong>From raw customer and order data to a validated, observable analytics warehouse.</strong>
+</p>
+
 **A local-first data engineering and analytics platform for e-commerce pipeline observability.**
 
 DataPulse ingests customer records from CSV and order transactions from a paginated
@@ -11,6 +19,8 @@ API and a Streamlit dashboard.
 > production-hardened hosted service. This repository documents the behavior that
 > is implemented and tested; deployment, security, and scale claims should be
 > evaluated against your own environment.
+
+[Quick start](#quick-start) · [Architecture](#architecture) · [Railway deployment](#railway-deployment) · [Docker Compose](#docker-setup) · [Tests](#automated-tests)
 
 ## Contents
 
@@ -31,6 +41,7 @@ API and a Streamlit dashboard.
 - [Pipeline execution](#pipeline-execution)
 - [API startup](#application-api-startup)
 - [Dashboard startup](#dashboard-startup)
+- [Railway deployment](#railway-deployment)
 - [Tests](#automated-tests)
 - [Performance benchmark](#performance-benchmark)
 - [Sample analytical results](#sample-analytical-results)
@@ -52,8 +63,8 @@ python scripts/generate_seed_data.py
 python scripts/run_pipeline.py
 ```
 
-After the pipeline completes, open two additional terminals in the same
-repository and activate the virtual environment in each:
+After the pipeline completes, start the warehouse API and dashboard in separate
+terminals from the repository root:
 
 ```powershell
 python main.py --api
@@ -64,10 +75,16 @@ streamlit run dashboard/app.py
 ```
 
 Open the [warehouse API documentation](http://127.0.0.1:8001/docs) or the
-[DataPulse dashboard](http://localhost:8501). The order-source mock API is a
-separate service; the default pipeline uses its in-process ASGI transport.
-For configuration options, test instructions, or PostgreSQL/Docker setup, see
-the sections below.
+[DataPulse dashboard](http://localhost:8501). The default pipeline uses the
+mock order source in-process; starting the separate source API is optional:
+
+```powershell
+python main.py --source-api
+```
+
+For PostgreSQL, Docker Compose, or Railway deployment, see the corresponding
+sections below. Check the current environment and database connection with
+`python main.py --health`.
 
 ## Business problem
 
@@ -98,8 +115,10 @@ dashboard.
 - Paginated order-source ingestion, including an in-process mock ASGI transport.
 - Pydantic input validation, domain checks, referential checks, and quarantine
   utilities.
-- Deterministic dimensional transformations and idempotent warehouse loading.
-- SQLite for local development and PostgreSQL for Docker-based development.
+- Deterministic dimensional transformations and idempotent warehouse loading
+  with shared namespaced surrogate-key generation for customer, product, and
+  order keys across loader paths.
+- SQLite for local development and PostgreSQL for Docker Compose or Railway.
 - Warehouse application API with interactive Swagger UI.
 - Streamlit sections for Overview, Pipeline Monitoring, Data Quality, Business
   Analytics, Data Explorer, and System Health.
@@ -120,8 +139,10 @@ dashboard.
 | Benchmark | Python `time.perf_counter`, SQLite, Windows process working-set sampling |
 | Containers | Docker, Docker Compose |
 
-Install the exact dependency ranges from [`requirements.txt`](requirements.txt)
-or the project metadata in [`pyproject.toml`](pyproject.toml).
+The Dockerfile and quick start install from
+[`requirements.txt`](requirements.txt). Both dependency manifests specify
+minimum versions rather than a lockfile; [`pyproject.toml`](pyproject.toml)
+maintains a separate dependency list.
 
 ## Architecture
 
@@ -267,29 +288,47 @@ Copy-Item .env.example .env
 ```
 
 The default local database is SQLite at the repository root. Review the values
-below; `.env` is intentionally excluded from version control.
+below; `.env` is intentionally excluded from version control. The application
+reads the following variables from `app/config/settings.py`:
 
 | Variable | Default | Purpose |
 |---|---|---|
+| `APP_NAME` | `DataPulse` | Display name |
 | `APP_ENV` | `development` | Application environment label |
+| `DEBUG` | `false` | Debug flag |
+| `LOG_LEVEL` | `INFO` | Log verbosity |
 | `RANDOM_SEED` | `42` | Synthetic data seed |
 | `DATABASE_URL` | `sqlite:///.../datapulse_warehouse.db` | SQLAlchemy warehouse connection |
 | `DB_ECHO` | `false` | Enable SQLAlchemy SQL logging |
+| `POSTGRES_DB` | `datapulse_dw` | PostgreSQL database name used by Docker Compose |
+| `POSTGRES_USER` | `datapulse` | PostgreSQL user used by Docker Compose |
+| `POSTGRES_PASSWORD` | `datapulse_secure_pass` | PostgreSQL password used by Docker Compose; replace for shared deployments |
+| `POSTGRES_HOST` | `localhost` | Parsed setting; does not configure the database connection |
+| `POSTGRES_PORT` | `5432` | Docker Compose host-port mapping |
 | `API_HOST` | `127.0.0.1` | Local Uvicorn bind host |
 | `API_PORT` | `8000` | Mock order-source port |
-| `APP_API_PORT` | `8001` | Warehouse application API port |
 | `API_BASE_URL` | `http://127.0.0.1:8000` | HTTP source API URL |
+| `APP_API_PORT` | `8001` | Warehouse application API port |
 | `APP_API_BASE_URL` | `http://127.0.0.1:8001` | Dashboard application API URL |
+| `API_TIMEOUT_SECONDS` | `10.0` | Timeout for HTTP source requests |
 | `API_PAGE_SIZE` | `50` | Default source-order page size |
 | `BATCH_SIZE` | `500` | Configured pipeline batch size |
 | `RETRY_ATTEMPTS` | `3` | HTTP source retry count |
 | `RETRY_BACKOFF_FACTOR` | `0.5` | Exponential retry delay base in seconds |
 | `INJECT_DIRTY_DATA_RATIO` | `0.08` | Synthetic invalid-record injection ratio |
 
-For PostgreSQL, set `DATABASE_URL` to a SQLAlchemy PostgreSQL URL and configure
-the corresponding `POSTGRES_*` variables. Do not commit credentials. Compose
-defaults are for local evaluation only; replace the sample password for any
-shared environment.
+`DATABASE_URL` is the application's actual database connection setting.
+`POSTGRES_*` values are consumed by Docker Compose to configure its PostgreSQL
+container; the application does not construct its database URL from them.
+Never commit credentials. Compose defaults are for local evaluation only.
+
+In Railway, explicitly set `DATABASE_URL` to the Railway PostgreSQL service's
+connection variable. The Docker image includes `.env.example`, and settings
+load it when `.env` is absent; that example sets SQLite as the default. Do not
+let a production service silently use the container-local SQLite file. Set
+`APP_API_BASE_URL` on the dashboard to the application API's private Railway
+URL. See [Railway deployment](#railway-deployment) and the detailed
+[`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 ## Database initialization
 
@@ -301,17 +340,21 @@ SQLite server or schema installation is required.
 
 ### PostgreSQL with Docker Compose
 
-The Compose stack initializes PostgreSQL using
+The Compose stack mounts
 [`docker/init.sql`](docker/init.sql) and
-[`sql/schema/01_init_warehouse.sql`](sql/schema/01_init_warehouse.sql) when the
-PostgreSQL data volume is initialized for the first time.
+[`sql/schema/01_init_warehouse.sql`](sql/schema/01_init_warehouse.sql) into
+PostgreSQL's first-initialization directory. PostgreSQL runs those scripts when
+the data volume is initialized for the first time; they are not rerun
+automatically against an existing volume. The application API and pipeline
+also create missing ORM tables on startup/run. These SQL scripts are not a
+replacement for managed migrations.
 
 For an existing PostgreSQL warehouse moving from 32-bit hashed surrogate keys,
 back up the database and apply
 [`sql/migrations/02_expand_surrogate_keys_to_bigint.sql`](sql/migrations/02_expand_surrogate_keys_to_bigint.sql)
-before deploying the 63-bit-key application. Review the migration against your
-own schema and constraint names before applying it. Container initialization
-scripts do not rerun automatically against an already-initialized volume.
+before deploying code that requires that schema change. Review the migration
+against the actual schema and constraints before applying it. The SQL files
+are manual scripts; the application does not run them automatically.
 
 ## Synthetic data generation
 
@@ -411,6 +454,27 @@ The sidebar navigates between Overview, Pipeline Monitoring, Data Quality,
 Business Analytics, Data Explorer, and System Health. When no warehouse data
 exists, the dashboard displays empty states rather than fabricated measures.
 
+## Railway deployment
+
+The Railway deployment plan is documented in
+[`DEPLOYMENT.md`](DEPLOYMENT.md), including exact service settings, start
+commands, environment-variable references, health paths, and persistence
+limits. In brief, deploy Railway PostgreSQL, the warehouse API, and the
+dashboard from the repository root using the existing `Dockerfile`. Override
+the Dockerfile's one-shot pipeline default with web-service commands that bind
+to `0.0.0.0` and Railway's assigned `PORT`.
+
+The API and dashboard need an explicit Railway PostgreSQL `DATABASE_URL`;
+configure their internal communication using Railway private networking. The
+dashboard needs `APP_API_BASE_URL` pointing to the API's private address. The
+pipeline is optional (it can be scheduled separately), and the mock source API
+is also optional because normal pipeline ingestion uses its in-process ASGI
+transport. Generated quarantine files, reports, and logs use local filesystem
+paths and are not durable across service replacement; the warehouse itself
+must use Railway PostgreSQL. Railway deploys the selected GitHub branch, so
+commit and push the changes intended for deployment first; uncommitted local
+changes are not included.
+
 ## Automated tests
 
 Run all unit and integration tests:
@@ -425,9 +489,12 @@ warehouse. It covers parsing, validation, transformations, database constraints,
 idempotency, analytics, application endpoints, and end-to-end pipeline behavior.
 
 The latest recorded complete run during documentation preparation was **50
-passed, 0 failed, 0 skipped**. This describes that run only; rerun the command
-for results in another environment. See [`docs/TESTING.md`](docs/TESTING.md) and
-the generated execution summary in [`test-results/test-execution-report.md`](test-results/test-execution-report.md).
+passed, 0 failed, 0 skipped**. The project was also smoke-tested locally with
+the FastAPI application API, mock source API, and Streamlit dashboard running
+on their HTTP endpoints. These checks do not replace rerunning the test suite
+for a new environment. See [`docs/TESTING.md`](docs/TESTING.md) and the
+generated execution summary in
+[`test-results/test-execution-report.md`](test-results/test-execution-report.md).
 
 ## Performance benchmark
 
@@ -456,15 +523,19 @@ measurements, method, and limits.
 
 ## Sample analytical results
 
-These are observed results from a local run using the default synthetic source
-configuration (seed `42`, 250 customer source rows, 1,000 order source rows,
-and the configured dirty-data injection). They are generated demonstration
-data, not production or externally sourced business results.
+These are observed results from a successful local pipeline run using the
+default synthetic source configuration (seed `42`, 250 customer source rows,
+1,000 order source rows, and the configured dirty-data injection). They are
+generated demonstration data, not production or externally sourced business
+results.
 
 | Measure | Observed value |
 |---|---:|
+| Total records ingested | 1,250 |
 | Customers loaded | 230 |
 | Orders loaded | 860 |
+| Total customer and order records loaded | 1,090 |
+| Quality score | 87.2% |
 | Completed orders | 512 |
 | Completed-order gross revenue | $426,358.94 |
 | Completed-order net revenue (subtotal less discounts) | $422,298.94 |
@@ -505,8 +576,13 @@ reasons before retrying corrected source records.
 
 ## Screenshots
 
-Screenshots were captured from the running local applications using an isolated
-synthetic demo warehouse. They are representative UI captures, not static mockups.
+The animated walkthrough at the top and the screenshots below were captured
+from the running local applications using synthetic demo data. They are
+representative interface captures, not static mockups or production data.
+
+**Animated product walkthrough**
+
+![Animated walkthrough of the DataPulse dashboard and API](screenshots/DataPulse.gif)
 
 **Streamlit dashboard — Overview**
 
@@ -530,6 +606,11 @@ synthetic demo warehouse. They are representative UI captures, not static mockup
   it for untrusted production batches.
 - The database loader and API are not a substitute for a managed migration,
   authentication, authorization, rate limiting, or secrets-management strategy.
+- The default development launchers use fixed local ports and bind settings;
+  Railway deployments must override the start commands to bind to `0.0.0.0`
+  and the assigned `PORT`. See [`DEPLOYMENT.md`](DEPLOYMENT.md).
+- Railway's production warehouse must use Railway PostgreSQL; SQLite stored
+  inside an application container is not durable across replacement.
 - The benchmark uses SQLite and generated records; it excludes network transport,
   data generation, schema creation, quarantine export, and audit persistence.
   Results do not predict PostgreSQL or production throughput.
@@ -561,3 +642,4 @@ synthetic demo warehouse. They are representative UI captures, not static mockup
 - [Measured performance report](docs/PERFORMANCE_REPORT.md)
 - [Design decisions](docs/DESIGN_DECISIONS.md)
 - [Data model reference](docs/DATA_MODEL.md)
+- [Railway deployment report and instructions](DEPLOYMENT.md)
