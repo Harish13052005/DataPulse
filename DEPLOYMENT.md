@@ -1,5 +1,10 @@
 # Railway Deployment
 
+> This document describes the earlier Railway deployment plan, not the current
+> live hosting setup. The current free demo runs on Render with Neon PostgreSQL;
+> its links and limitations are documented in the README's
+> [Live deployment](README.md#live-deployment-render--neon) section.
+
 This guide deploys the existing DataPulse services from the repository root.
 It keeps the existing application logic and uses Railway's managed PostgreSQL
 service for durable warehouse storage.
