@@ -44,6 +44,18 @@ def create_db_engine(database_url: str | None = None) -> Engine:
         engine_kwargs["pool_size"] = 10
         engine_kwargs["max_overflow"] = 20
         engine_kwargs["pool_recycle"] = 1800
+        # Hosted Postgres (Neon/Render) requires TLS; add sslmode when not local.
+        try:
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+            host = (parsed.hostname or "").lower()
+            if host and host not in ("localhost", "127.0.0.1") and "sslmode" not in url:
+                connect_args["sslmode"] = "require"
+                connect_args["connect_timeout"] = 10
+        except Exception:
+            pass
+        if connect_args:
+            engine_kwargs["connect_args"] = connect_args
 
     engine = create_engine(url, **engine_kwargs)
 

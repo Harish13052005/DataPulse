@@ -583,7 +583,7 @@ def reconcile_source_target(session: Session) -> Dict[str, Any]:
         (FactOrder, "fact_orders"),
         (FactOrderItem, "fact_order_items"),
     ]:
-        cnt = session.execute(select([model])).scalar()
+        cnt = session.execute(select(model)).scalar()
         stats[name] = cnt
     return stats
 
