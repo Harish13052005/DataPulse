@@ -25,7 +25,9 @@ class AnalyticsQueries:
 
     def get_rfm_segmentation(self) -> pd.DataFrame:
         """Compute RFM scores and segments for customers."""
-        query = text("""
+        dialect = getattr(self.engine.dialect, "name", "").lower()
+        recency_expr = "(EXTRACT(EPOCH FROM (rd.max_dt - COALESCE(ca.last_order_date, CAST(ca.signup_date AS TIMESTAMP)))) / 86400.0)" if dialect.startswith("postgres") else "(JULIANDAY(rd.max_dt) - JULIANDAY(COALESCE(ca.last_order_date, ca.signup_date)))"
+        query = text(f"""
             WITH customer_aggregates AS (
                 SELECT 
                     c.customer_id,
@@ -52,9 +54,7 @@ class AnalyticsQueries:
             rfm_metrics AS (
                 SELECT 
                     ca.*,
-                    ROUND(
-                        (JULIANDAY(rd.max_dt) - JULIANDAY(COALESCE(ca.last_order_date, ca.signup_date)))
-                    ) AS recency_days
+                    ROUND({recency_expr}) AS recency_days
                 FROM customer_aggregates ca
                 CROSS JOIN ref_date rd
             )

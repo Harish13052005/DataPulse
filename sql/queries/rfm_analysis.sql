@@ -30,7 +30,7 @@ rfm_metrics AS (
     SELECT 
         ca.*,
         ROUND(
-            (JULIANDAY(rd.max_dt) - JULIANDAY(COALESCE(ca.last_order_date, ca.signup_date)))
+            (EXTRACT(EPOCH FROM (rd.max_dt - COALESCE(ca.last_order_date, CAST(ca.signup_date AS TIMESTAMP)))) / 86400.0)
         ) AS recency_days
     FROM customer_aggregates ca
     CROSS JOIN ref_date rd
