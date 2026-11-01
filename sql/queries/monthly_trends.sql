@@ -11,12 +11,12 @@ WITH monthly_summary AS (
         COUNT(o.order_key) AS total_orders,
         SUM(CASE WHEN o.status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_orders,
         SUM(CASE WHEN o.status = 'REFUNDED' THEN 1 ELSE 0 END) AS refunded_orders,
-        ROUND(SUM(o.subtotal), 2) AS gross_revenue,
-        ROUND(SUM(o.discount_amount), 2) AS total_discounts,
-        ROUND(SUM(o.tax_amount), 2) AS total_taxes,
-        ROUND(SUM(o.shipping_fee), 2) AS total_shipping,
-        ROUND(SUM(o.net_amount), 2) AS net_revenue,
-        ROUND(AVG(o.net_amount), 2) AS average_order_value
+        ROUND(CAST(SUM(o.subtotal) AS NUMERIC), 2) AS gross_revenue,
+        ROUND(CAST(SUM(o.discount_amount) AS NUMERIC), 2) AS total_discounts,
+        ROUND(CAST(SUM(o.tax_amount) AS NUMERIC), 2) AS total_taxes,
+        ROUND(CAST(SUM(o.shipping_fee) AS NUMERIC), 2) AS total_shipping,
+        ROUND(CAST(SUM(o.net_amount) AS NUMERIC), 2) AS net_revenue,
+        ROUND(CAST(AVG(o.net_amount) AS NUMERIC), 2) AS average_order_value
     FROM fact_orders o
     JOIN dim_date d ON o.order_date_key = d.date_key
     GROUP BY d.year, d.month_num
@@ -33,10 +33,7 @@ SELECT
     total_discounts,
     net_revenue,
     average_order_value,
-    ROUND(
-        ((net_revenue - LAG(net_revenue, 1) OVER (ORDER BY year, month_num)) / 
-        NULLIF(LAG(net_revenue, 1) OVER (ORDER BY year, month_num), 0.0)) * 100.0, 
-        2
-    ) AS mom_growth_pct
+    ROUND(CAST(((net_revenue - LAG(net_revenue, 1) OVER (ORDER BY year, month_num)) / 
+        NULLIF(LAG(net_revenue, 1) OVER (ORDER BY year, month_num), 0.0)) * 100.0 AS NUMERIC), 2) AS mom_growth_pct
 FROM monthly_summary
 ORDER BY year_month ASC;

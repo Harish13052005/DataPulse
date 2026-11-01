@@ -68,8 +68,8 @@ class AnalyticsQueries:
                 last_order_date,
                 recency_days,
                 frequency,
-                ROUND(monetary, 2) AS monetary,
-                ROUND(avg_order_value, 2) AS avg_order_value,
+                ROUND(CAST(monetary AS NUMERIC), 2) AS monetary,
+                ROUND(CAST(avg_order_value AS NUMERIC), 2) AS avg_order_value,
                 CASE 
                     WHEN frequency >= 4 AND monetary >= 1500 THEN 'Champions'
                     WHEN frequency >= 3 AND monetary >= 800 THEN 'Loyal Customers'
@@ -96,12 +96,12 @@ class AnalyticsQueries:
                     COUNT(o.order_key) AS total_orders,
                     SUM(CASE WHEN o.status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_orders,
                     SUM(CASE WHEN o.status = 'REFUNDED' THEN 1 ELSE 0 END) AS refunded_orders,
-                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.subtotal ELSE 0 END), 2) AS gross_revenue,
-                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.discount_amount ELSE 0 END), 2) AS total_discounts,
-                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.tax_amount ELSE 0 END), 2) AS total_taxes,
-                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.shipping_fee ELSE 0 END), 2) AS total_shipping,
-                    ROUND(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.net_amount ELSE 0 END), 2) AS net_revenue,
-                    ROUND(AVG(CASE WHEN o.status = 'COMPLETED' THEN o.net_amount ELSE NULL END), 2) AS average_order_value
+                    ROUND(CAST(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.subtotal ELSE 0 END) AS NUMERIC), 2) AS gross_revenue,
+                    ROUND(CAST(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.discount_amount ELSE 0 END) AS NUMERIC), 2) AS total_discounts,
+                    ROUND(CAST(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.tax_amount ELSE 0 END) AS NUMERIC), 2) AS total_taxes,
+                    ROUND(CAST(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.shipping_fee ELSE 0 END) AS NUMERIC), 2) AS total_shipping,
+                    ROUND(CAST(SUM(CASE WHEN o.status = 'COMPLETED' THEN o.net_amount ELSE 0 END) AS NUMERIC), 2) AS net_revenue,
+                    ROUND(CAST(AVG(CASE WHEN o.status = 'COMPLETED' THEN o.net_amount ELSE NULL END) AS NUMERIC), 2) AS average_order_value
                 FROM fact_orders o
                 JOIN dim_date d ON o.order_date_key = d.date_key
                 GROUP BY d.year, d.month_num
@@ -118,11 +118,8 @@ class AnalyticsQueries:
                 total_discounts,
                 net_revenue,
                 average_order_value,
-                ROUND(
-                    ((net_revenue - LAG(net_revenue, 1) OVER (ORDER BY year, month_num)) / 
-                    NULLIF(LAG(net_revenue, 1) OVER (ORDER BY year, month_num), 0.0)) * 100.0, 
-                    2
-                ) AS mom_growth_pct
+                ROUND(CAST(((net_revenue - LAG(net_revenue, 1) OVER (ORDER BY year, month_num)) / 
+                    NULLIF(LAG(net_revenue, 1) OVER (ORDER BY year, month_num), 0.0)) * 100.0 AS NUMERIC), 2) AS mom_growth_pct
             FROM monthly_summary
             ORDER BY year_month ASC;
         """)
@@ -140,9 +137,9 @@ class AnalyticsQueries:
                 p.unit_price,
                 COUNT(DISTINCT oi.order_key) AS total_orders,
                 SUM(oi.quantity) AS total_units_sold,
-                ROUND(SUM(oi.line_total), 2) AS gross_sales,
-                ROUND(SUM(oi.discount_allocated), 2) AS total_discounts,
-                ROUND(SUM(oi.line_total - oi.discount_allocated), 2) AS net_sales
+                ROUND(CAST(SUM(oi.line_total) AS NUMERIC), 2) AS gross_sales,
+                ROUND(CAST(SUM(oi.discount_allocated) AS NUMERIC), 2) AS total_discounts,
+                ROUND(CAST(SUM(oi.line_total - oi.discount_allocated) AS NUMERIC), 2) AS net_sales
             FROM fact_order_items oi
             JOIN dim_products p ON oi.product_key = p.product_key
             JOIN fact_orders o ON oi.order_key = o.order_key
@@ -162,8 +159,8 @@ class AnalyticsQueries:
                 COUNT(DISTINCT p.product_id) AS product_count,
                 COUNT(DISTINCT oi.order_key) AS order_count,
                 SUM(oi.quantity) AS total_units,
-                ROUND(SUM(oi.line_total - oi.discount_allocated), 2) AS net_revenue,
-                ROUND(AVG(p.unit_price), 2) AS avg_product_price
+                ROUND(CAST(SUM(oi.line_total - oi.discount_allocated) AS NUMERIC), 2) AS net_revenue,
+                ROUND(CAST(AVG(p.unit_price) AS NUMERIC), 2) AS avg_product_price
             FROM fact_order_items oi
             JOIN dim_products p ON oi.product_key = p.product_key
             JOIN fact_orders o ON oi.order_key = o.order_key
@@ -181,9 +178,9 @@ class AnalyticsQueries:
                 c.customer_segment,
                 COUNT(DISTINCT c.customer_key) AS total_customers,
                 COUNT(DISTINCT o.order_key) AS total_orders,
-                ROUND(COALESCE(SUM(o.net_amount), 0.0), 2) AS total_revenue,
-                ROUND(COALESCE(AVG(o.net_amount), 0.0), 2) AS avg_order_value,
-                ROUND(COALESCE(SUM(o.net_amount), 0.0) / NULLIF(COUNT(DISTINCT c.customer_key), 0), 2) AS clv_per_customer
+                ROUND(CAST(COALESCE(SUM(o.net_amount), 0.0) AS NUMERIC), 2) AS total_revenue,
+                ROUND(CAST(COALESCE(AVG(o.net_amount), 0.0) AS NUMERIC), 2) AS avg_order_value,
+                ROUND(CAST(COALESCE(SUM(o.net_amount), 0.0) / NULLIF(COUNT(DISTINCT c.customer_key), 0) AS NUMERIC), 2) AS clv_per_customer
             FROM dim_customers c
             LEFT JOIN fact_orders o 
                 ON c.customer_key = o.customer_key 
@@ -202,8 +199,8 @@ class AnalyticsQueries:
                 (SELECT COUNT(*) FROM dim_customers WHERE is_active = 1) AS active_customers,
                 (SELECT COUNT(*) FROM fact_orders) AS total_orders,
                 (SELECT COUNT(*) FROM fact_orders WHERE status = 'COMPLETED') AS completed_orders,
-                (SELECT ROUND(COALESCE(SUM(net_amount), 0.0), 2) FROM fact_orders WHERE status = 'COMPLETED') AS total_net_revenue,
-                (SELECT ROUND(COALESCE(AVG(net_amount), 0.0), 2) FROM fact_orders WHERE status = 'COMPLETED') AS average_order_value,
+                (SELECT ROUND(CAST(COALESCE(SUM(net_amount), 0.0) AS NUMERIC), 2) FROM fact_orders WHERE status = 'COMPLETED') AS total_net_revenue,
+                (SELECT ROUND(CAST(COALESCE(AVG(net_amount), 0.0) AS NUMERIC), 2) FROM fact_orders WHERE status = 'COMPLETED') AS average_order_value,
                 (SELECT COUNT(*) FROM quarantine_records) AS total_quarantined_records,
                 (SELECT COUNT(*) FROM pipeline_runs) AS total_pipeline_runs
         """)

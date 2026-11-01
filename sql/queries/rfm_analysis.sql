@@ -45,8 +45,8 @@ SELECT
     last_order_date,
     recency_days,
     frequency,
-    ROUND(monetary, 2) AS monetary,
-    ROUND(avg_order_value, 2) AS avg_order_value,
+    ROUND(CAST(monetary AS NUMERIC), 2) AS monetary,
+    ROUND(CAST(avg_order_value AS NUMERIC), 2) AS avg_order_value,
     CASE 
         WHEN frequency >= 4 AND monetary >= 1500 THEN 'Champions'
         WHEN frequency >= 3 AND monetary >= 800 THEN 'Loyal Customers'
