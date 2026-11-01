@@ -723,7 +723,7 @@ elif section == "Business Analytics":
             geo_query = text(
                 """
                 SELECT c.state, COUNT(DISTINCT o.order_key) AS orders,
-                       ROUND(COALESCE(SUM(o.net_amount), 0), 2) AS revenue
+                       ROUND(CAST(COALESCE(SUM(o.net_amount), 0) AS NUMERIC), 2) AS revenue
                 FROM dim_customers c
                 JOIN fact_orders o ON o.customer_key = c.customer_key
                 WHERE o.status = 'COMPLETED'
